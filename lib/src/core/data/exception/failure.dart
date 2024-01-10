@@ -19,3 +19,8 @@ class CacheFailure extends Failure {
   CacheFailure({required String errorMessage})
       : super(errorMessage: errorMessage);
 }
+
+class AuthFailure extends Failure {
+  AuthFailure({required String errorMessage})
+      : super(errorMessage: errorMessage);
+}

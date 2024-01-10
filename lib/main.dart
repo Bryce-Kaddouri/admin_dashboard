@@ -10,38 +10,50 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  await Supabase.initialize(
+    url: 'https://qlhzemdpzbonyqdecfxn.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsaHplbWRwemJvbnlxZGVjZnhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQ4ODY4MDYsImV4cCI6MjAyMDQ2MjgwNn0.lcUJMI3dvMDT7LaO7MiudIkdxAZOZwF_hNtkQtF3OC8',
+  );
+
+  final supabaseAdmin = SupabaseClient(
+      'https://qlhzemdpzbonyqdecfxn.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFsaHplbWRwemJvbnlxZGVjZnhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDQ4ODY4MDYsImV4cCI6MjAyMDQ2MjgwNn0.lcUJMI3dvMDT7LaO7MiudIkdxAZOZwF_hNtkQtF3OC8');
+  final supabaseClient = Supabase.instance;
+  AuthRepository authRepository =
+      AuthRepositoryImpl(dataSource: AuthDataSource());
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<AuthProvider>(
+          create: (context) => AuthProvider(
+            authLoginUseCase: AuthLoginUseCase(authRepository: authRepository),
+          ),
+        ),
+        // Provider<BranchProvider>(create: (_) => BranchProvider()),
+        // Provider<OrderProvider>(create: (_) => OrderProvider()),
+        // Provider<LocationProvider>(create: (_) => LocationProvider()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   // This widget is the root of your application.
-  final supabaseAdmin = SupabaseClient(
-      'https://xbikruujrtiezljgcnvu.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhiaWtydXVqcnRpZXpsamdjbnZ1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcwNDc1NjU2MCwiZXhwIjoyMDIwMzMyNTYwfQ.qygMomgwZcWBv2vldVv--cxV1uYb4ZXhNJEhNvDqAI0');
-  final supabaseClient = Supabase.instance;
-  AuthRepository authRepository =
-      AuthRepositoryImpl(dataSource: AuthDataSource());
+
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<AuthProvider>(
-            create: (_) => AuthProvider(
-                authLoginUseCase:
-                    AuthLoginUseCase(authRepository: authRepository))),
-        // Provider<BranchProvider>(create: (_) => BranchProvider()),
-        // Provider<OrderProvider>(create: (_) => OrderProvider()),
-        // Provider<LocationProvider>(create: (_) => LocationProvider()),
+    return GetMaterialApp(
+      getPages: [
+        GetPage(name: '/login', page: () => SignInScreen()),
+        GetPage(name: '/home', page: () => const Placeholder()),
       ],
-      child: GetMaterialApp(
-        getPages: [
-          GetPage(name: '/login', page: () => SignInScreen()),
-          GetPage(name: '/home', page: () => const Placeholder()),
-        ],
-      ),
+      initialRoute: 'login',
     );
   }
 }

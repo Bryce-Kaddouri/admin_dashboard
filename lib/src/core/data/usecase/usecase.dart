@@ -2,7 +2,7 @@ import 'package:dartz/dartz.dart';
 import '../exception/failure.dart';
 
 abstract class UseCase<Type, Params> {
-  Future<Either<Exception, Type>> call(Params params);
+  Future<Either<Failure, Type>> call(Params params);
 }
 
 abstract class SingleUseCaseAsync<Type, Params> {

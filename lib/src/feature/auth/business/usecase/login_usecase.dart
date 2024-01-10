@@ -7,12 +7,13 @@ import '../repository/auth_repository.dart';
 
 class AuthLoginUseCase implements UseCase<AuthResponse, LoginParams> {
   final AuthRepository authRepository;
+
   const AuthLoginUseCase({
     required this.authRepository,
   });
 
   @override
-  Future<Either<Exception, AuthResponse>> call(LoginParams params) {
+  Future<Either<AuthFailure, AuthResponse>> call(LoginParams params) {
     return authRepository.login(params);
   }
 }

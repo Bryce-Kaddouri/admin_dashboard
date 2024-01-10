@@ -1,11 +1,16 @@
+import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignInScreen extends StatelessWidget {
   SignInScreen({super.key});
+
   // global key for the form
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
   // controller for the email field
   final TextEditingController _emailController = TextEditingController();
+
   // controller for the password field
   final TextEditingController _passwordController = TextEditingController();
 
@@ -44,7 +49,10 @@ class SignInScreen extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  // do something
+                  context.read<AuthProvider>().login(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      );
                 }
               },
               child: Text('Sign In'),
