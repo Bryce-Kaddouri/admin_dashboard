@@ -1,20 +1,36 @@
-import 'package:admin_dashboard/src/feature/auth/business/usecase/login_usecase.dart';
+import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_login_usecase.dart';
 import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../../../../core/data/usecase/usecase.dart';
 import '../../business/param/login_params.dart';
+import '../../business/usecase/auth_get_user_usecase.dart';
+import '../../business/usecase/auth_is_looged_in_usecase.dart';
+import '../../business/usecase/auth_logout_usecase.dart';
 
 class AuthProvider with ChangeNotifier {
   final AuthLoginUseCase authLoginUseCase;
+  final AuthLogoutUseCase authLogoutUseCase;
+  final AuthGetUserUseCase authGetUserUseCase;
+  final AuthIsLoggedInUseCase authIsLoggedInUseCase;
 
-  AuthProvider({required this.authLoginUseCase});
+  AuthProvider({
+    required this.authLoginUseCase,
+    required this.authLogoutUseCase,
+    required this.authGetUserUseCase,
+    required this.authIsLoggedInUseCase,
+  });
 
-  bool _isLoggin = false;
+  bool checkIsLoggedIn() {
+    return authIsLoggedInUseCase.call(NoParams());
+  }
 
-  bool get isLogin => _isLoggin;
+  User? getUser() {
+    return authGetUserUseCase.call(NoParams());
+  }
 
-  void setIslogin(bool val) {
-    _isLoggin = val;
-    notifyListeners();
+  Future<void> logout() async {
+    await authLogoutUseCase.call(NoParams());
   }
 
   bool _isLoading = false;
@@ -26,13 +42,9 @@ class AuthProvider with ChangeNotifier {
   String get loginErrorMessage => _loginErrorMessage;
 
   Future<bool> login(String email, String password) async {
-    /*LoginParams params = LoginParams(email: email, password: password);
-    var response = authLoginUseCase.call(params);
-    print(response);*/
     _isLoading = true;
     _loginErrorMessage = '';
     bool isSuccess = false;
-
     notifyListeners();
     final result = await authLoginUseCase
         .call(LoginParams(email: email, password: password));
