@@ -12,7 +12,7 @@ class AuthLoginUseCase implements UseCase<AuthResponse, LoginParams> {
   });
 
   @override
-  Future<Either<Failure, AuthResponse>> call(LoginParams params) {
+  Future<Either<Exception, AuthResponse>> call(LoginParams params) {
     return authRepository.login(params);
   }
 }
