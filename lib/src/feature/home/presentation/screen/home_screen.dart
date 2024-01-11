@@ -31,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return [
       CollapsibleItem(
           text: 'Categories',
-          icon: Icons.assessment,
+          icon: Icon(Icons.category, color: Colors.red),
           onPressed: () => setState(() => _headline = 'DashBoard'),
           onHold: () => ScaffoldMessenger.of(context)
               .showSnackBar(SnackBar(content: const Text("Dashboard"))),
@@ -39,8 +39,15 @@ class _HomeScreenState extends State<HomeScreen> {
           subItems: [
             CollapsibleItem(
               text: 'Category List',
+              icon: Icon(
+                Icons.fiber_manual_record,
+                color: Colors.red,
+                size: 10,
+              ),
               // dot icon
+/*
               icon: Icons.fiber_manual_record,
+*/
 
               onPressed: () => setState(() => _headline = 'Menu'),
               onHold: () => ScaffoldMessenger.of(context)
@@ -49,8 +56,12 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             CollapsibleItem(
               text: 'Add Category',
-              iconImage: AssetImage("assets/shop_icon.png"),
-              icon: Icons.ac_unit,
+              // dot icon
+              icon: Icon(
+                Icons.fiber_manual_record,
+                color: Colors.red,
+                size: 10,
+              ),
               onPressed: () => setState(() => _headline = 'Add Category'),
               onHold: () => ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: const Text("Shop"))),
@@ -59,12 +70,12 @@ class _HomeScreenState extends State<HomeScreen> {
           ]),
       CollapsibleItem(
         text: 'Search',
-        icon: Icons.search,
+        icon: Icon(Icons.search),
         onPressed: () => setState(() => _headline = 'Search'),
         onHold: () => ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: const Text("Search"))),
       ),
-      CollapsibleItem(
+      /*CollapsibleItem(
         text: 'Notifications',
         icon: Icons.notifications,
         onPressed: () => setState(() => _headline = 'Notifications'),
@@ -160,7 +171,10 @@ class _HomeScreenState extends State<HomeScreen> {
                       ]),
                   CollapsibleItem(
                     text: 'News 3',
+                    iconImage: AssetImage("assets/img.png"),
+*/ /*
                     icon: Icons.three_k,
+*/ /*
                     onPressed: () => setState(() => _headline = 'News 3'),
                     onHold: () => ScaffoldMessenger.of(context)
                         .showSnackBar(SnackBar(content: const Text("News 3"))),
@@ -180,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onPressed: () => setState(() => _headline = 'Face'),
         onHold: () => ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: const Text("Face"))),
-      ),
+      ),*/
     ];
   }
 
@@ -194,7 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
         collapseOnBodyTap: false,
         avatarImg: _avatarImg,
         title: 'John Smith',
-        iconSize: 30,
         onTitleTap: () {
           ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text('Yay! Flutter Collapsible Sidebar!')));
@@ -248,3 +261,48 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+/*class CustomCollapsibleItem extends CollapsibleItem {
+  final String text;
+  final Icon icon;
+  final VoidCallback onPressed;
+  final VoidCallback onHold;
+  final bool isSelected;
+  final List<CollapsibleItem>? subItems;
+
+  CustomCollapsibleItem({
+    required this.text,
+    required this.icon,
+    required this.onPressed,
+    required this.onHold,
+    this.isSelected = false,
+    this.subItems,
+  });
+
+  @override
+  CollapsibleItem build(BuildContext context) {
+    return CollapsibleItem(
+      text: text,
+      icon: icon,
+      onPressed: onPressed,
+      onHold: onHold,
+      isSelected: isSelected,
+      subItems: subItems,
+    );
+  }*/
+
+/*CustomCollapsibleItem({
+    required String text,
+    required IconData icon,
+    required VoidCallback onPressed,
+    required VoidCallback onHold,
+    bool isSelected = false,
+    List<CollapsibleItem>? subItems,
+  }) : super(
+          text: text,
+          icon: icon,
+          onPressed: onPressed,
+          onHold: onHold,
+          isSelected: isSelected,
+          subItems: subItems,
+        );*/
