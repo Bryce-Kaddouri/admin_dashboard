@@ -80,6 +80,7 @@ class MyApp extends StatelessWidget {
         }
       },
       getPages: Routes().getPages,
+      initialRoute: '/login',
       home: StreamBuilder<AuthState>(
         stream: context.read<AuthProvider>().onAuthStateChange(),
         builder: (context, snapshot) {
@@ -88,8 +89,9 @@ class MyApp extends StatelessWidget {
             final user = snapshot.data;
             if (user == null) {
               return SignInScreen();
+            } else {
+              return const HomeScreen();
             }
-            return const HomeScreen();
           }
           return const Scaffold(
             body: Center(

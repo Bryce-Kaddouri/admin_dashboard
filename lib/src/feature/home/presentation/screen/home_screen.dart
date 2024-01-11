@@ -1,11 +1,8 @@
 import 'package:admin_dashboard/src/core/share_component/side_bar_widget.dart';
+import 'package:admin_dashboard/src/feature/category/presentation/screen/category_add_screen.dart';
+import 'package:admin_dashboard/src/feature/category/presentation/screen/category_list_screen.dart';
+import 'package:admin_dashboard/src/feature/category/presentation/screen/category_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:provider/provider.dart';
-import 'dart:math' as math show pi;
-import '../../../auth/presentation/provider/auth_provider.dart';
-import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var pagecontroller = PageController(initialPage: 0);
+  PageController pageController = PageController(initialPage: 0);
   @override
   void initState() {
     super.initState();
@@ -25,32 +22,20 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SideBarWidget(
-        pageController: pagecontroller,
+        pageController: pageController,
         selectedIndex: 0,
         body: Container(
           child: PageView(
-            controller: pagecontroller,
+            controller: pageController,
             children: [
               Container(
                 child: Center(
                   child: Text('Home'),
                 ),
               ),
-              Container(
-                child: Center(
-                  child: Text('Categories'),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Text('Category List'),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Text('Add Category'),
-                ),
-              ),
+              CategoryScreen(),
+              CategoryListScreen(),
+              CategoryAddScreen(),
               Container(
                 child: Center(
                   child: Text('Products'),
