@@ -2,7 +2,7 @@ import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SideBarWidget extends StatelessWidget {
+class SideBarWidget extends StatefulWidget {
   final int selectedIndex;
   final Widget body;
   final PageController pageController;
@@ -91,30 +91,47 @@ class SideBarWidget extends StatelessWidget {
   ];
 
   @override
+  State<SideBarWidget> createState() => _SideBarWidgetState();
+}
+
+class _SideBarWidgetState extends State<SideBarWidget> {
+  bool isCollapsed = false;
+
+  @override
   Widget build(BuildContext context) {
     return CollapsibleSidebar(
-      isCollapsed: MediaQuery.of(context).size.width <= 800,
-      items: List.generate(lstPages.length, (index) {
+      onTapToggled: () {
+        setState(() {
+          isCollapsed = !isCollapsed;
+        });
+      },
+      collapseOnBodyTap: false,
+      isCollapsed: isCollapsed,
+      items: List.generate(SideBarWidget.lstPages.length, (index) {
         return CollapsibleItem(
-          text: lstPages[index]['name'],
-          icon: lstPages[index]['icon'],
-          onPressed: () => pageController.jumpToPage(lstPages[index]['index']),
-          isSelected: selectedIndex == lstPages[index]['index'],
-          subItems: lstPages[index]['children'].isEmpty
+          text: SideBarWidget.lstPages[index]['name'],
+          icon: SideBarWidget.lstPages[index]['icon'],
+          onPressed: () => widget.pageController
+              .jumpToPage(SideBarWidget.lstPages[index]['index']),
+          isSelected:
+              widget.selectedIndex == SideBarWidget.lstPages[index]['index'],
+          subItems: SideBarWidget.lstPages[index]['children'].isEmpty
               ? null
-              : List.generate(lstPages[index]['children'].length, (i) {
+              : List.generate(SideBarWidget.lstPages[index]['children'].length,
+                  (i) {
                   return CollapsibleItem(
-                    text: lstPages[index]['children'][i]['name'],
-                    icon: lstPages[index]['children'][i]['icon'],
-                    onPressed: () => pageController
-                        .jumpToPage(lstPages[index]['children'][i]['index']),
-                    isSelected: selectedIndex ==
-                        lstPages[index]['children'][i]['index'],
+                    text: SideBarWidget.lstPages[index]['children'][i]['name'],
+                    icon: SideBarWidget.lstPages[index]['children'][i]['icon'],
+                    onPressed: () => widget.pageController.jumpToPage(
+                        SideBarWidget.lstPages[index]['children'][i]['index']),
+                    isSelected: widget.selectedIndex ==
+                        SideBarWidget.lstPages[index]['children'][i]['index'],
                   );
                 }),
         );
       }),
-      collapseOnBodyTap: true,
+      minWidth: 80,
+      maxWidth: 250,
       avatarImg:
           NetworkImage("https://cdn-icons-png.flaticon.com/512/330/330703.png"),
       title: 'John Smith',
@@ -122,7 +139,26 @@ class SideBarWidget extends StatelessWidget {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Yay! Flutter Collapsible Sidebar!')));
       },
-      body: body,
+      body: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 10,
+          vertical: 5,
+        ),
+        alignment: Alignment.centerRight,
+        child: AnimatedContainer(
+          width: isCollapsed
+              ? MediaQuery.of(context).size.width
+              : MediaQuery.of(context).size.width - 270,
+          height: MediaQuery.of(context).size.height,
+          curve: Curves.fastLinearToSlowEaseIn,
+          duration: const Duration(milliseconds: 500),
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            color: Colors.black,
+          ),
+          child: widget.body,
+        ),
+      ),
       backgroundColor: Colors.black,
       selectedTextColor: Colors.limeAccent,
       textStyle: TextStyle(fontSize: 15, fontStyle: FontStyle.italic),
@@ -131,7 +167,8 @@ class SideBarWidget extends StatelessWidget {
           fontStyle: FontStyle.italic,
           fontWeight: FontWeight.bold),
       toggleTitleStyle: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      sidebarBoxShadow: [
+      sidebarBoxShadow: [],
+      /* sidebarBoxShadow: [
         BoxShadow(
           color: Colors.indigo,
           blurRadius: 20,
@@ -144,7 +181,7 @@ class SideBarWidget extends StatelessWidget {
           spreadRadius: 0.01,
           offset: Offset(3, 3),
         ),
-      ],
+      ],*/
     );
   }
 }

@@ -13,16 +13,6 @@ class SignInScreen extends StatelessWidget {
   // global key for the form
   final _formKey = GlobalKey<FormBuilderState>();
 
-/*
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-*/
-
-  // controller for the email field
-  final TextEditingController _emailController = TextEditingController();
-
-  // controller for the password field
-  final TextEditingController _passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
