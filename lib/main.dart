@@ -66,37 +66,38 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        routingCallback: (routing) {
-          print('route: ${routing?.current}');
+      routingCallback: (routing) {
+        print('route: ${routing?.current}');
 
-          if (routing?.current == '/login') {
-            if (context.read<AuthProvider>().checkIsLoggedIn()) {
-              routing?.current = '/home';
-            }
-          } else {
-            if (!context.read<AuthProvider>().checkIsLoggedIn()) {
-              routing?.current = '/login';
-            }
+        if (routing?.current == '/login') {
+          if (context.read<AuthProvider>().checkIsLoggedIn()) {
+            routing?.current = '/home';
           }
-        },
-        getPages: Routes().getPages,
-        home: StreamBuilder<AuthState>(
-          stream: context.read<AuthProvider>().onAuthStateChange(),
-          builder: (context, snapshot) {
-            print('snapshot: ${snapshot.connectionState}');
-            if (snapshot.connectionState == ConnectionState.active) {
-              final user = snapshot.data;
-              if (user == null) {
-                return SignInScreen();
-              }
-              return HomeScreen();
+        } else {
+          if (!context.read<AuthProvider>().checkIsLoggedIn()) {
+            routing?.current = '/login';
+          }
+        }
+      },
+      getPages: Routes().getPages,
+      home: StreamBuilder<AuthState>(
+        stream: context.read<AuthProvider>().onAuthStateChange(),
+        builder: (context, snapshot) {
+          print('snapshot: ${snapshot.connectionState}');
+          if (snapshot.connectionState == ConnectionState.active) {
+            final user = snapshot.data;
+            if (user == null) {
+              return SignInScreen();
             }
-            return Scaffold(
-              body: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
-          },
-        ));
+            return const HomeScreen();
+          }
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+      ),
+    );
   }
 }
