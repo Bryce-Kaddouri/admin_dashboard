@@ -45,4 +45,8 @@ class AuthDataSource {
   User? getUser(NoParams param) {
     return _auth.currentUser;
   }
+
+  Stream<AuthState> onAuthStateChange() {
+    return _auth.onAuthStateChange;
+  }
 }

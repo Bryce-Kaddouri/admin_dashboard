@@ -6,6 +6,7 @@ import 'package:admin_dashboard/src/feature/auth/business/param/login_params.dar
 import 'package:dartz/dartz.dart';
 
 import 'package:gotrue/src/types/auth_response.dart';
+import 'package:gotrue/src/types/auth_state.dart';
 import 'package:gotrue/src/types/user.dart';
 
 import '../../business/repository/auth_repository.dart';
@@ -34,5 +35,10 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<AuthFailure, String>> logout(NoParams param) async {
     return await dataSource.logout(param);
+  }
+
+  @override
+  Stream<AuthState> onAuthStateChange(NoParams param) {
+    return dataSource.onAuthStateChange();
   }
 }

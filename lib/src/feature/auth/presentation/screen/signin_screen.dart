@@ -69,7 +69,7 @@ class SignInScreen extends StatelessWidget {
                         )
                         .then((value) {
                       if (value) {
-                        Get.toNamed('/');
+                        Get.offAllNamed('/home');
                       } else {
                         Get.snackbar(
                           'Error',

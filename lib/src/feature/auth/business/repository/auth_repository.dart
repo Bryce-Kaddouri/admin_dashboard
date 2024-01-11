@@ -13,6 +13,8 @@ abstract class AuthRepository {
 
   User? getUser(NoParams param);
 
+  Stream<AuthState> onAuthStateChange(NoParams param);
+
 /*bool isLoggedIn();
   String getUserToken();*/
 }

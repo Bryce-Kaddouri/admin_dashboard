@@ -1,12 +1,15 @@
+import 'package:admin_dashboard/src/core/constant/route.dart';
 import 'package:admin_dashboard/src/feature/auth/business/repository/auth_repository.dart';
 import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_get_user_usecase.dart';
 import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_is_looged_in_usecase.dart';
 import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_login_usecase.dart';
 import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_logout_usecase.dart';
+import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_on_auth_change_usecase.dart';
 import 'package:admin_dashboard/src/feature/auth/data/datasource/auth_datasource.dart';
 import 'package:admin_dashboard/src/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:admin_dashboard/src/feature/auth/presentation/screen/signin_screen.dart';
+import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -42,6 +45,8 @@ Future<void> main() async {
                 AuthGetUserUseCase(authRepository: authRepository),
             authIsLoggedInUseCase:
                 AuthIsLoggedInUseCase(authRepository: authRepository),
+            authOnAuthChangeUseCase:
+                AuthOnAuthOnAuthChangeUseCase(authRepository: authRepository),
           ),
         ),
         // Provider<BranchProvider>(create: (_) => BranchProvider()),
@@ -61,41 +66,37 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      routingCallback: (routing) {
-        print('route: ${routing?.current}');
+        routingCallback: (routing) {
+          print('route: ${routing?.current}');
 
-        if (routing?.current == '/login') {
-          if (context.read<AuthProvider>().checkIsLoggedIn()) {
-            routing?.current = '/home';
+          if (routing?.current == '/login') {
+            if (context.read<AuthProvider>().checkIsLoggedIn()) {
+              routing?.current = '/home';
+            }
           } else {
-            routing?.current = '/login';
+            if (!context.read<AuthProvider>().checkIsLoggedIn()) {
+              routing?.current = '/login';
+            }
           }
-        } else {
-          if (!context.read<AuthProvider>().checkIsLoggedIn()) {
-            routing?.current = '/login';
-          }
-        }
-      },
-      routes: {
-        '/': (context) => context.read<AuthProvider>().checkIsLoggedIn()
-            ? Scaffold(
-                appBar: AppBar(
-                  title: Text('Home'),
-                  actions: [
-                    IconButton(
-                      onPressed: () async {
-                        await context.read<AuthProvider>().logout();
-
-                        Get.offAllNamed('/');
-                      },
-                      icon: Icon(Icons.logout),
-                    )
-                  ],
-                ),
-              )
-            : SignInScreen(),
-      },
-      initialRoute: '/',
-    );
+        },
+        getPages: Routes().getPages,
+        home: StreamBuilder<AuthState>(
+          stream: context.read<AuthProvider>().onAuthStateChange(),
+          builder: (context, snapshot) {
+            print('snapshot: ${snapshot.connectionState}');
+            if (snapshot.connectionState == ConnectionState.active) {
+              final user = snapshot.data;
+              if (user == null) {
+                return SignInScreen();
+              }
+              return HomeScreen();
+            }
+            return Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          },
+        ));
   }
 }

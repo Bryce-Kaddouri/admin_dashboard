@@ -1,4 +1,5 @@
 import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_login_usecase.dart';
+import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_on_auth_change_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -13,12 +14,14 @@ class AuthProvider with ChangeNotifier {
   final AuthLogoutUseCase authLogoutUseCase;
   final AuthGetUserUseCase authGetUserUseCase;
   final AuthIsLoggedInUseCase authIsLoggedInUseCase;
+  final AuthOnAuthOnAuthChangeUseCase authOnAuthChangeUseCase;
 
   AuthProvider({
     required this.authLoginUseCase,
     required this.authLogoutUseCase,
     required this.authGetUserUseCase,
     required this.authIsLoggedInUseCase,
+    required this.authOnAuthChangeUseCase,
   });
 
   bool checkIsLoggedIn() {
@@ -59,5 +62,9 @@ class AuthProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
     return isSuccess;
+  }
+
+  Stream<AuthState> onAuthStateChange() {
+    return authOnAuthChangeUseCase.call(NoParams());
   }
 }
