@@ -34,7 +34,7 @@ class CategoryModel {
       'id': id,
       'name': name,
       'description': description,
-      'image_url': imageUrl,
+      'photo_url': imageUrl,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'is_visible': isVisible,

@@ -3,6 +3,9 @@ import 'package:admin_dashboard/src/feature/category/presentation/screen/categor
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_list_screen.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../../category/presentation/category_provider/category_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,6 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   PageController pageController = PageController(initialPage: 0);
+  int idCategory = -1;
 
   @override
   void initState() {
@@ -35,8 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               CategoryScreen(),
-              CategoryListScreen(),
+              CategoryListScreen(
+                mainPageController: pageController,
+              ),
               CategoryAddScreen(pageController: pageController),
+              CategoryAddScreen(
+                pageController: pageController,
+              ),
               Container(
                 child: Center(
                   child: Text('Products'),

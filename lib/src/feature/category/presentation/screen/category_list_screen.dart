@@ -10,7 +10,8 @@ import '../../data/model/category_model.dart';
 import '../category_provider/category_provider.dart';
 
 class CategoryListScreen extends StatefulWidget {
-  CategoryListScreen({super.key});
+  PageController mainPageController;
+  CategoryListScreen({super.key, required this.mainPageController});
 
   @override
   State<CategoryListScreen> createState() => _CategoryListScreenState();
@@ -160,6 +161,11 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                                 color: Colors.white),
                                             onTap: () {
                                               print('edit');
+                                              widget.mainPageController
+                                                  .jumpToPage(4);
+                                              context
+                                                  .read<CategoryProvider>()
+                                                  .setCategoryModel(category);
                                             },
                                           ),
                                         ),

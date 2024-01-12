@@ -79,20 +79,30 @@ class CategoryDataSource {
       CategoryModel categoryModel) async {
     try {
       categoryModel = categoryModel.copyWith(updatedAt: DateTime.now());
+      print('categoryModel from update datasource');
+      print(categoryModel.toJson());
+      Map<String, dynamic> categoryMap = categoryModel.toJson();
+      categoryMap.removeWhere((key, value) => key == 'id');
       List<Map<String, dynamic>> response = await _client
           .from('categories')
-          .update(categoryModel.toJson())
+          .update(categoryMap)
           .eq('id', categoryModel.id)
-          .limit(1)
-          .order('id', ascending: true)
           .select();
+      print('response update');
+      print(response);
       if (response.isNotEmpty) {
         CategoryModel categoryModel = CategoryModel.fromJson(response[0]);
         return Right(categoryModel);
       } else {
+        print('response is empty');
         return Left(DatabaseFailure(errorMessage: 'Error updating category'));
       }
+    } on PostgrestException catch (error) {
+      print('postgrest error');
+      print(error);
+      return Left(DatabaseFailure(errorMessage: 'Error updating category'));
     } catch (e) {
+      print('error updating category');
       return Left(DatabaseFailure(errorMessage: 'Error updating category'));
     }
   }

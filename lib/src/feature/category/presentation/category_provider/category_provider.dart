@@ -42,6 +42,13 @@ class CategoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  CategoryModel? _categoryModel;
+  CategoryModel? get categoryModel => _categoryModel;
+  void setCategoryModel(CategoryModel? value) {
+    _categoryModel = value;
+    notifyListeners();
+  }
+
   Future<XFile?> pickImage() async {
     final ImagePicker picker = ImagePicker();
     ImageSource source = ImageSource.gallery;
@@ -145,6 +152,39 @@ class CategoryProvider with ChangeNotifier {
     _isLoading = false;
     notifyListeners();
     return isSuccess;
+  }
+
+  Future<CategoryModel?> getCategoryById(int id) async {
+    CategoryModel? categoryModel;
+    final result = await categoryGetCategoryByIdUseCase.call(id);
+
+    await result.fold((l) async {
+      _addCategoryErrorMessage = l.errorMessage;
+    }, (r) async {
+      print(r.toJson());
+      categoryModel = CategoryModel.fromJson(r.toJson());
+    });
+
+    return categoryModel;
+  }
+
+  Future<CategoryModel?> updateCategory(CategoryModel category) async {
+    _isLoading = true;
+    notifyListeners();
+    CategoryModel? categoryModel;
+    final result = await categoryUpdateCategoryUseCase.call(category);
+
+    await result.fold((l) async {
+      _addCategoryErrorMessage = l.errorMessage;
+    }, (r) async {
+      print(r.toJson());
+      categoryModel = CategoryModel.fromJson(r.toJson());
+    });
+
+    _isLoading = false;
+    notifyListeners();
+
+    return categoryModel;
   }
 
   Future<bool> deleteCategory(int id) async {

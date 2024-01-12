@@ -12,12 +12,20 @@ class SideBarWidget extends StatefulWidget {
       required this.body,
       required this.pageController});
 
-  static List lstPages = [
+  @override
+  State<SideBarWidget> createState() => _SideBarWidgetState();
+}
+
+class _SideBarWidgetState extends State<SideBarWidget> {
+  bool isCollapsed = false;
+  List lstPages = [
     {
       'name': 'Home',
       'index': 0,
       'children': [],
-      'icon': const Icon(Icons.home)
+      'icon': const Icon(Icons.home),
+      'onTap': () => print('Home'),
+      'isVisibled': true,
     },
     {
       'name': 'Categories',
@@ -27,75 +35,98 @@ class SideBarWidget extends StatefulWidget {
           'name': 'Category List',
           'index': 2,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Category List'),
+          'isVisibled': true,
         },
         {
           'name': 'Add Category',
           'index': 3,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Add Category'),
+          'isVisibled': true,
+        },
+        {
+          'name': 'Update Category',
+          'index': 4,
+          'icon': const Icon(Icons.fiber_manual_record,
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Add Category'),
+          'isVisibled': false,
         }
       ],
-      'icon': const Icon(Icons.category)
+      'icon': const Icon(Icons.category),
+      'onTap': () => print('Categories'),
+      'isVisibled': true,
     },
     {
       'name': 'Products',
-      'index': 4,
+      'index': 5,
       'children': [
         {
           'name': 'Product List',
-          'index': 5,
+          'index': 6,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Product List'),
+          'isVisibled': true,
         },
         {
           'name': 'Add Product',
-          'index': 6,
+          'index': 7,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Add Product'),
+          'isVisibled': true,
         },
       ],
-      'icon': const Icon(Icons.cake_rounded)
+      'icon': const Icon(Icons.cake_rounded),
+      'onTap': () => print('Products'),
+      'isVisibled': true,
     },
     {
       'name': 'Users',
-      'index': 7,
+      'index': 8,
       'children': [
         {
           'name': 'User List',
-          'index': 8,
+          'index': 9,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('User List'),
+          'isVisibled': true,
         },
         {
           'name': 'Add User',
-          'index': 9,
+          'index': 10,
           'icon': const Icon(Icons.fiber_manual_record,
-              color: Colors.blue, size: 10)
+              color: Colors.blue, size: 10),
+          'onTap': () => print('Add User'),
+          'isVisibled': true,
         },
       ],
-      'icon': const Icon(Icons.group)
+      'icon': const Icon(Icons.group),
+      'onTap': () => print('Users'),
+      'isVisibled': true,
     },
     {
       'name': 'Settings',
-      'index': 10,
+      'index': 11,
       'children': [],
-      'icon': const Icon(Icons.settings)
+      'icon': const Icon(Icons.settings),
+      'onTap': () => print('Settings'),
+      'isVisibled': true,
     },
     {
       'name': 'Logout',
-      'index': 11,
+      'index': 12,
       'children': [],
-      'icon': const Icon(Icons.logout)
+      'icon': const Icon(Icons.logout),
+      'onTap': () => print('Logout'),
+      'isVisibled': true,
     },
   ];
-
-  @override
-  State<SideBarWidget> createState() => _SideBarWidgetState();
-}
-
-class _SideBarWidgetState extends State<SideBarWidget> {
-  bool isCollapsed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -107,25 +138,29 @@ class _SideBarWidgetState extends State<SideBarWidget> {
       },
       collapseOnBodyTap: false,
       isCollapsed: isCollapsed,
-      items: List.generate(SideBarWidget.lstPages.length, (index) {
+      items: List.generate(lstPages.length, (index) {
         return CollapsibleItem(
-          text: SideBarWidget.lstPages[index]['name'],
-          icon: SideBarWidget.lstPages[index]['icon'],
-          onPressed: () => widget.pageController
-              .jumpToPage(SideBarWidget.lstPages[index]['index']),
-          isSelected:
-              widget.selectedIndex == SideBarWidget.lstPages[index]['index'],
-          subItems: SideBarWidget.lstPages[index]['children'].isEmpty
+          text: lstPages[index]['name'],
+          icon: lstPages[index]['icon'],
+          onPressed: () =>
+              widget.pageController.jumpToPage(lstPages[index]['index']),
+          isSelected: widget.selectedIndex == lstPages[index]['index'],
+          subItems: lstPages[index]['children'].isEmpty
               ? null
-              : List.generate(SideBarWidget.lstPages[index]['children'].length,
-                  (i) {
+              : List.generate(
+                  lstPages[index]['children']
+                      .where((element) => element['isVisibled'] == true)
+                      .length, (i) {
                   return CollapsibleItem(
-                    text: SideBarWidget.lstPages[index]['children'][i]['name'],
-                    icon: SideBarWidget.lstPages[index]['children'][i]['icon'],
-                    onPressed: () => widget.pageController.jumpToPage(
-                        SideBarWidget.lstPages[index]['children'][i]['index']),
+                    text: lstPages[index]['children'][i]['name'],
+                    icon: lstPages[index]['children'][i]['icon'],
+                    onPressed: () {
+                      lstPages[index]['children'][i]['onTap']();
+                      widget.pageController
+                          .jumpToPage(lstPages[index]['children'][i]['index']);
+                    },
                     isSelected: widget.selectedIndex ==
-                        SideBarWidget.lstPages[index]['children'][i]['index'],
+                        lstPages[index]['children'][i]['index'],
                   );
                 }),
         );
