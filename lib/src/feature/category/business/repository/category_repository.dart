@@ -22,4 +22,5 @@ abstract class CategoryRepository {
 
   Future<Either<StorageFailure, String>> uploadImage(Uint8List bytes);
   Future<Either<StorageFailure, String>> getSignedUrl(String path);
+  Future<Either<DatabaseFailure, CategoryModel>> deleteCategory(int id);
 }

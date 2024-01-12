@@ -2,6 +2,8 @@ import 'dart:js_interop';
 
 import 'package:admin_dashboard/src/feature/category/data/datasource/category_datasource.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/model/category_model.dart';
@@ -175,6 +177,52 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                                 color: Colors.white),
                                             onTap: () {
                                               print('delete');
+                                              print(
+                                                  'category id: ${category.id}');
+                                              Get.defaultDialog(
+                                                contentPadding:
+                                                    EdgeInsets.all(20),
+                                                content: Column(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .delete_forever_rounded,
+                                                      color: Colors.redAccent,
+                                                      size: 100,
+                                                    ),
+                                                    Text(
+                                                        'Are you sure to delete this category? The deletion of this category will delete all products associated with it.'),
+                                                  ],
+                                                ),
+                                                title: 'Delete category',
+                                                textConfirm: 'Yes',
+                                                textCancel: 'No',
+                                                confirmTextColor: Colors.white,
+                                                onConfirm: () async {
+                                                  bool res = await context
+                                                      .read<CategoryProvider>()
+                                                      .deleteCategory(
+                                                          category.id);
+                                                  Get.back();
+                                                  if (res) {
+                                                    Get.snackbar(
+                                                      'Success',
+                                                      'Category deleted successfully',
+                                                      backgroundColor:
+                                                          Colors.green,
+                                                      colorText: Colors.white,
+                                                    );
+                                                  } else {
+                                                    Get.snackbar(
+                                                      'Error',
+                                                      'An error occured while deleting category',
+                                                      backgroundColor:
+                                                          Colors.red,
+                                                      colorText: Colors.white,
+                                                    );
+                                                  }
+                                                },
+                                              );
                                             },
                                           ),
                                         ),
@@ -194,6 +242,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                       width: double.infinity,
                       color: Colors.red,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
                             icon: Icon(Icons.arrow_back_ios),

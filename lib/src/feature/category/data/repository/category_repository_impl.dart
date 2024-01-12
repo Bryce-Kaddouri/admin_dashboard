@@ -49,4 +49,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<StorageFailure, String>> getSignedUrl(String path) async {
     return await dataSource.getSignedUrl(path);
   }
+
+  @override
+  Future<Either<DatabaseFailure, CategoryModel>> deleteCategory(int id) async {
+    return await dataSource.deleteCategory(id);
+  }
 }

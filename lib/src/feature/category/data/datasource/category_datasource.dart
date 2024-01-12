@@ -142,4 +142,25 @@ class CategoryDataSource {
       return Left(StorageFailure(errorMessage: 'Error getting signed url'));
     }
   }
+
+  // method to delete category
+  Future<Either<DatabaseFailure, CategoryModel>> deleteCategory(int id) async {
+    try {
+      List<Map<String, dynamic>> response = await _client
+          .from('categories')
+          .delete()
+          .eq('id', id)
+          .limit(1)
+          .order('id', ascending: true)
+          .select();
+      if (response.isNotEmpty) {
+        CategoryModel categoryModel = CategoryModel.fromJson(response[0]);
+        return Right(categoryModel);
+      } else {
+        return Left(DatabaseFailure(errorMessage: 'Error deleting category'));
+      }
+    } catch (e) {
+      return Left(DatabaseFailure(errorMessage: 'Error deleting category'));
+    }
+  }
 }

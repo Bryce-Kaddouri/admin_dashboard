@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/data/usecase/usecase.dart';
 import '../../business/param/category_add_param.dart';
+import '../../business/usecase/category_delete_usecase.dart';
 import '../../business/usecase/category_get_category_by_id_usecase.dart';
 import '../../business/usecase/category_get_signed_url_usecase.dart';
 import '../../business/usecase/category_upload_image_usecase.dart';
@@ -20,6 +21,7 @@ class CategoryProvider with ChangeNotifier {
   final CategoryUpdateUseCase categoryUpdateCategoryUseCase;
   final CategoryUploadImageUseCase categoryUploadImageUseCase;
   final CategoryGetSignedUrlUseCase categoryGetSignedUrlUseCase;
+  final CategoryDeleteUseCase categoryDeleteUseCase;
 
   CategoryProvider({
     required this.categoryAddUseCase,
@@ -28,6 +30,7 @@ class CategoryProvider with ChangeNotifier {
     required this.categoryUpdateCategoryUseCase,
     required this.categoryUploadImageUseCase,
     required this.categoryGetSignedUrlUseCase,
+    required this.categoryDeleteUseCase,
   });
 
   bool _isLoading = false;
@@ -129,6 +132,26 @@ class CategoryProvider with ChangeNotifier {
       description: description,
       imageUrl: imageUrl,
     ));
+
+    await result.fold((l) async {
+      _addCategoryErrorMessage = l.errorMessage;
+
+      isSuccess = false;
+    }, (r) async {
+      print(r.toJson());
+      isSuccess = true;
+    });
+
+    _isLoading = false;
+    notifyListeners();
+    return isSuccess;
+  }
+
+  Future<bool> deleteCategory(int id) async {
+    _isLoading = true;
+    bool isSuccess = false;
+    notifyListeners();
+    final result = await categoryDeleteUseCase.call(id);
 
     await result.fold((l) async {
       _addCategoryErrorMessage = l.errorMessage;

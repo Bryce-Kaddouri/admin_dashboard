@@ -11,6 +11,7 @@ import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_prov
 import 'package:admin_dashboard/src/feature/auth/presentation/screen/signin_screen.dart';
 import 'package:admin_dashboard/src/feature/category/business/repository/category_repository.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_add_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_delete_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_categories_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_category_by_id_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_signed_url_usecase.dart';
@@ -75,6 +76,8 @@ Future<void> main() async {
                 categoryRepository: categoryRepository),
             categoryGetSignedUrlUseCase: CategoryGetSignedUrlUseCase(
                 categoryRepository: categoryRepository),
+            categoryDeleteUseCase:
+                CategoryDeleteUseCase(categoryRepository: categoryRepository),
           ),
         ),
       ],
