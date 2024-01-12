@@ -2,6 +2,7 @@ import 'dart:js_interop';
 
 import 'package:admin_dashboard/src/feature/category/data/datasource/category_datasource.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ import '../category_provider/category_provider.dart';
 
 class CategoryListScreen extends StatefulWidget {
   PageController mainPageController;
+
   CategoryListScreen({super.key, required this.mainPageController});
 
   @override
@@ -22,7 +24,6 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     initialPage: 0,
   );
   int currentPage = 0;
-  int nbItemPerPage = 5;
   int nbPages = 0;
 
   @override
@@ -42,9 +43,74 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
     return Column(
       children: [
         Container(
-          height: 50,
+          height: 60,
           width: double.infinity,
-          color: Colors.red,
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
+            border: Border.all(
+              color: Colors.blueAccent,
+              width: 4,
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 80,
+                height: 40,
+                child: FormBuilderDropdown(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      contentPadding: EdgeInsets.all(10),
+                      filled: true,
+                      fillColor: Colors.white,
+                    ),
+                    onChanged: (value) {
+                      print('value: $value');
+                      context.read<CategoryProvider>().setNbItemPerPage(value!);
+                    },
+                    initialValue:
+                        context.watch<CategoryProvider>().nbItemPerPage,
+                    name: 'item_per_page',
+                    items: [
+                      DropdownMenuItem(
+                        child: Text('10'),
+                        value: 10,
+                      ),
+                      DropdownMenuItem(
+                        child: Text('25'),
+                        value: 25,
+                      ),
+                      DropdownMenuItem(
+                        child: Text('50'),
+                        value: 50,
+                      ),
+                    ]),
+              ),
+              SizedBox(width: 10),
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.blueAccent,
+                ),
+                child: InkWell(
+                  child: Icon(Icons.add, color: Colors.white),
+                  onTap: () {
+                    print('add');
+                    widget.mainPageController.jumpToPage(3);
+                    context.read<CategoryProvider>().setCategoryModel(null);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
         Expanded(
           child: StreamBuilder<List<Map<String, dynamic>>>(
@@ -60,10 +126,12 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                   );
                 }
                 print('categories: ${categories.length}');
-                int nbItemPerPage = 5;
-                int nbPages = categories.length ~/ nbItemPerPage;
+                int nbPages = categories.length ~/
+                    context.watch<CategoryProvider>().nbItemPerPage;
                 print('nbPages: $nbPages');
-                if (categories.length % nbItemPerPage != 0) {
+                if (categories.length %
+                        context.watch<CategoryProvider>().nbItemPerPage !=
+                    0) {
                   nbPages++;
                 }
                 // add post frame callback to avoid calling setState during build
@@ -77,11 +145,16 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                           return ListView.builder(
                             padding: const EdgeInsets.all(10),
                             shrinkWrap: true,
-                            itemCount: nbItemPerPage,
+                            itemCount:
+                                context.watch<CategoryProvider>().nbItemPerPage,
                             itemBuilder: (context, index) {
                               int correctIndex = indexPage == 0
                                   ? index
-                                  : (indexPage * nbItemPerPage) + index;
+                                  : (indexPage *
+                                          context
+                                              .watch<CategoryProvider>()
+                                              .nbItemPerPage) +
+                                      index;
                               if (correctIndex > categories.length - 1) {
                                 return Container();
                               }
@@ -90,7 +163,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                               print('index: $index');
                               print('indexPage: $indexPage');
                               print(
-                                  'correct index: ${indexPage == 0 ? index : (indexPage * nbItemPerPage) + index}');
+                                  'correct index: ${indexPage == 0 ? index : (indexPage * context.watch<CategoryProvider>().nbItemPerPage) + index}');
                               print('-' * 50);
 
                               return Card(
@@ -269,14 +342,25 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                       ),
                     ),
                     Container(
-                      height: 50,
+                      height: 60,
                       width: double.infinity,
-                      color: Colors.red,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(10),
+                          bottomRight: Radius.circular(10),
+                        ),
+                        border: Border.all(
+                          color: Colors.blueAccent,
+                          width: 4,
+                        ),
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           IconButton(
-                            icon: Icon(Icons.arrow_back_ios),
+                            icon:
+                                Icon(Icons.arrow_back_ios, color: Colors.white),
                             onPressed: () {
                               pageController.previousPage(
                                   duration: Duration(milliseconds: 300),
@@ -287,7 +371,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                             text: TextSpan(
                               text: '${currentPage + 1}',
                               style: TextStyle(
-                                color: Colors.black,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20,
                               ),
@@ -295,7 +379,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                 TextSpan(
                                   text: '/$nbPages',
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.normal,
                                     fontSize: 20,
                                   ),
@@ -304,7 +388,8 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                             ),
                           ),
                           IconButton(
-                            icon: Icon(Icons.arrow_forward_ios),
+                            icon: Icon(Icons.arrow_forward_ios,
+                                color: Colors.white),
                             onPressed: () {
                               pageController.nextPage(
                                   duration: Duration(milliseconds: 300),

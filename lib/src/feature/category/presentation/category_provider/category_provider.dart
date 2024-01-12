@@ -43,9 +43,20 @@ class CategoryProvider with ChangeNotifier {
   }
 
   CategoryModel? _categoryModel;
+
   CategoryModel? get categoryModel => _categoryModel;
+
   void setCategoryModel(CategoryModel? value) {
     _categoryModel = value;
+    notifyListeners();
+  }
+
+  int _nbItemPerPage = 10;
+
+  int get nbItemPerPage => _nbItemPerPage;
+
+  void setNbItemPerPage(int value) {
+    _nbItemPerPage = value;
     notifyListeners();
   }
 
