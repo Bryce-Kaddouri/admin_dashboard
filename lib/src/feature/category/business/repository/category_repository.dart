@@ -21,4 +21,5 @@ abstract class CategoryRepository {
       CategoryModel category);
 
   Future<Either<StorageFailure, String>> uploadImage(Uint8List bytes);
+  Future<Either<StorageFailure, String>> getSignedUrl(String path);
 }

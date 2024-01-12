@@ -13,6 +13,7 @@ import 'package:admin_dashboard/src/feature/category/business/repository/categor
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_add_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_categories_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_category_by_id_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_signed_url_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_update_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_upload_image_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/data/datasource/category_datasource.dart';
@@ -71,6 +72,8 @@ Future<void> main() async {
             categoryUpdateCategoryUseCase:
                 CategoryUpdateUseCase(categoryRepository: categoryRepository),
             categoryUploadImageUseCase: CategoryUploadImageUseCase(
+                categoryRepository: categoryRepository),
+            categoryGetSignedUrlUseCase: CategoryGetSignedUrlUseCase(
                 categoryRepository: categoryRepository),
           ),
         ),

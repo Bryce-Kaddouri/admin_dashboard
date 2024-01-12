@@ -44,4 +44,9 @@ class CategoryRepositoryImpl implements CategoryRepository {
   Future<Either<StorageFailure, String>> uploadImage(Uint8List bytes) async {
     return await dataSource.uploadImage(bytes);
   }
+
+  @override
+  Future<Either<StorageFailure, String>> getSignedUrl(String path) async {
+    return await dataSource.getSignedUrl(path);
+  }
 }

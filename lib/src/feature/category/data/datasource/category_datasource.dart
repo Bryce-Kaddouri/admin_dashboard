@@ -14,7 +14,7 @@ class CategoryDataSource {
       CategoryAddParam params) async {
     try {
       List<Map<String, dynamic>> response =
-      await _client.from('categories').insert(params.toJson()).select();
+          await _client.from('categories').insert(params.toJson()).select();
       print(response);
       if (response.isNotEmpty) {
         print('response is not empty');
@@ -42,7 +42,7 @@ class CategoryDataSource {
           .order('id', ascending: true);
       if (response.isNotEmpty) {
         List<CategoryModel> categoryList =
-        response.map((e) => CategoryModel.fromJson(e)).toList();
+            response.map((e) => CategoryModel.fromJson(e)).toList();
         return Right(categoryList);
       } else {
         return Left(DatabaseFailure(errorMessage: 'Error getting categories'));
@@ -101,18 +101,16 @@ class CategoryDataSource {
     try {
       DateTime now = DateTime.now();
       final response = await _client.storage.from('categories').uploadBinary(
-        '$now.jpg',
-        bytes,
-        fileOptions: const FileOptions(
-          contentType: 'image/jpg',
-          upsert: true,
-        ),
-      );
+            '$now.jpg',
+            bytes,
+            fileOptions: const FileOptions(
+              contentType: 'image/jpg',
+              upsert: true,
+            ),
+          );
 
       if (response != null) {
-        String publicUrl =
-        _client.storage.from('categories').getPublicUrl(response);
-        return Right(publicUrl);
+        return Right(response);
       } else {
         return Left(StorageFailure(errorMessage: 'Error uploading image'));
       }
@@ -122,6 +120,26 @@ class CategoryDataSource {
       return Left(StorageFailure(errorMessage: 'Error uploading image'));
     } catch (e) {
       return Left(StorageFailure(errorMessage: 'Error uploading image'));
+    }
+  }
+
+  Future<Either<StorageFailure, String>> getSignedUrl(String path) async {
+    try {
+      final response = await _client.storage.from('categories').createSignedUrl(
+            path,
+            const Duration(days: 1).inSeconds,
+          );
+      if (response != null) {
+        return Right(response);
+      } else {
+        return Left(StorageFailure(errorMessage: 'Error getting signed url'));
+      }
+    } on StorageException catch (error) {
+      print('storage error');
+      print(error);
+      return Left(StorageFailure(errorMessage: 'Error getting signed url'));
+    } catch (e) {
+      return Left(StorageFailure(errorMessage: 'Error getting signed url'));
     }
   }
 }

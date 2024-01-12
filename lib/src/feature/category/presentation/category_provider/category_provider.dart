@@ -9,7 +9,9 @@ import 'package:image_picker/image_picker.dart';
 import '../../../../core/data/usecase/usecase.dart';
 import '../../business/param/category_add_param.dart';
 import '../../business/usecase/category_get_category_by_id_usecase.dart';
+import '../../business/usecase/category_get_signed_url_usecase.dart';
 import '../../business/usecase/category_upload_image_usecase.dart';
+import '../../data/model/category_model.dart';
 
 class CategoryProvider with ChangeNotifier {
   final CategoryAddUseCase categoryAddUseCase;
@@ -17,6 +19,7 @@ class CategoryProvider with ChangeNotifier {
   final CategoryGetCategoryByIdUseCase categoryGetCategoryByIdUseCase;
   final CategoryUpdateUseCase categoryUpdateCategoryUseCase;
   final CategoryUploadImageUseCase categoryUploadImageUseCase;
+  final CategoryGetSignedUrlUseCase categoryGetSignedUrlUseCase;
 
   CategoryProvider({
     required this.categoryAddUseCase,
@@ -24,6 +27,7 @@ class CategoryProvider with ChangeNotifier {
     required this.categoryGetCategoryByIdUseCase,
     required this.categoryUpdateCategoryUseCase,
     required this.categoryUploadImageUseCase,
+    required this.categoryGetSignedUrlUseCase,
   });
 
   bool _isLoading = false;
@@ -94,6 +98,24 @@ class CategoryProvider with ChangeNotifier {
 
     _isLoading = false;
     notifyListeners();
+    return url;
+  }
+
+  Future<String?> getSignedUrl(String path) async {
+    path = path.split('/').last;
+    String? url;
+
+    final result = await categoryGetSignedUrlUseCase.call(path);
+
+    await result.fold((l) async {
+      _addCategoryErrorMessage = l.errorMessage;
+
+      url = null;
+    }, (r) async {
+      print(r);
+      url = r;
+    });
+
     return url;
   }
 
