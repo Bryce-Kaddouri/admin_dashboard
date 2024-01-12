@@ -58,6 +58,39 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
           ),
           child: Row(
             children: [
+              SizedBox(width: 10),
+              Expanded(
+                child: FormBuilderTextField(
+                  name: 'sarch',
+                  controller:
+                      context.watch<CategoryProvider>().searchController,
+                  onChanged: (value) {
+                    print('value: $value');
+                    context.read<CategoryProvider>().setSearchText(value!);
+                  },
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.search),
+                    suffixIcon: InkWell(
+                      child: Icon(Icons.clear),
+                      onTap: () {
+                        context.read<CategoryProvider>().setSearchText('');
+                        context.read<CategoryProvider>().setTextController('');
+                      },
+                    ),
+                    contentPadding: EdgeInsets.all(10),
+                    constraints: BoxConstraints(
+                      maxHeight: 40,
+                    ),
+                    hintText: 'Search a category ...',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    filled: true,
+                    fillColor: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
               Container(
                 width: 80,
                 height: 40,
@@ -119,13 +152,33 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
               print('snapshot: ${snapshot.connectionState}');
               print('snapshot: ${snapshot.data}');
               if (snapshot.hasData) {
-                final categories = snapshot.data;
+                var categories = snapshot.data;
                 if (categories == null || categories.isEmpty) {
                   return const Center(
                     child: Text('No data'),
                   );
                 }
+                categories = categories
+                    .where((element) => element['name']
+                        .toString()
+                        .toLowerCase()
+                        .contains(context
+                            .watch<CategoryProvider>()
+                            .searchText
+                            .toLowerCase()))
+                    .toList();
                 print('categories: ${categories.length}');
+
+                if (categories.isEmpty &&
+                    context.watch<CategoryProvider>().searchText.isNotEmpty) {
+                  return const Center(
+                    child: Text(
+                      'No data, try another search',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  );
+                }
+
                 int nbPages = categories.length ~/
                     context.watch<CategoryProvider>().nbItemPerPage;
                 print('nbPages: $nbPages');
@@ -155,7 +208,7 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                               .watch<CategoryProvider>()
                                               .nbItemPerPage) +
                                       index;
-                              if (correctIndex > categories.length - 1) {
+                              if (correctIndex > categories!.length - 1) {
                                 return Container();
                               }
                               final category = CategoryModel.fromJson(

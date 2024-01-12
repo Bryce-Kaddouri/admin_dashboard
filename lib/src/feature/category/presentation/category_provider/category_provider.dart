@@ -60,6 +60,24 @@ class CategoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  String _searchText = '';
+
+  String get searchText => _searchText;
+
+  void setSearchText(String value) {
+    _searchText = value;
+    notifyListeners();
+  }
+
+  TextEditingController _searchController = TextEditingController();
+
+  TextEditingController get searchController => _searchController;
+
+  void setTextController(String value) {
+    _searchController.text = value;
+    notifyListeners();
+  }
+
   Future<XFile?> pickImage() async {
     final ImagePicker picker = ImagePicker();
     ImageSource source = ImageSource.gallery;
