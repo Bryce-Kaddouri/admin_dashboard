@@ -100,45 +100,70 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   leading: Container(
-                                    width: 50,
                                     height: 50,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: Colors.blueAccent,
-                                    ),
-                                    child: FutureBuilder<String?>(
-                                      future: context
-                                          .read<CategoryProvider>()
-                                          .getSignedUrl(
-                                              category?.imageUrl ?? ''),
-                                      builder: (context, snapshot) {
-                                        print(
-                                            'snapshot stqte: ${snapshot.connectionState}');
-                                        print('snapshot: ${snapshot.data}');
-                                        if (snapshot.connectionState ==
-                                            ConnectionState.done) {
-                                          if (snapshot.hasData) {
-                                            return Image.network(
-                                              snapshot.data!,
-                                              fit: BoxFit.cover,
-                                              errorBuilder:
-                                                  (context, error, stackTrace) {
-                                                return const Icon(Icons.error,
-                                                    color: Colors.white);
-                                              },
-                                            );
-                                          } else {
-                                            return const Icon(Icons.error,
-                                                color: Colors.white);
-                                          }
-                                        } else {
-                                          return const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.white,
+                                    width: 100,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              '${category.id}',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20,
+                                              ),
                                             ),
-                                          );
-                                        }
-                                      },
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 50,
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            color: Colors.blueAccent,
+                                          ),
+                                          child: FutureBuilder<String?>(
+                                            future: context
+                                                .read<CategoryProvider>()
+                                                .getSignedUrl(
+                                                    category?.imageUrl ?? ''),
+                                            builder: (context, snapshot) {
+                                              print(
+                                                  'snapshot stqte: ${snapshot.connectionState}');
+                                              print(
+                                                  'snapshot: ${snapshot.data}');
+                                              if (snapshot.connectionState ==
+                                                  ConnectionState.done) {
+                                                if (snapshot.hasData) {
+                                                  return Image.network(
+                                                    snapshot.data!,
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Icon(
+                                                          Icons.error,
+                                                          color: Colors.white);
+                                                    },
+                                                  );
+                                                } else {
+                                                  return const Icon(Icons.error,
+                                                      color: Colors.white);
+                                                }
+                                              } else {
+                                                return const Center(
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    color: Colors.white,
+                                                  ),
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                   title: Text(category?.name ?? ''),

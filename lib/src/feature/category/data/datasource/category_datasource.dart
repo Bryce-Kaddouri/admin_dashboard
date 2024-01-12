@@ -72,7 +72,9 @@ class CategoryDataSource {
   }
 
   Stream<List<Map<String, dynamic>>> getCategoryByIdStream() {
-    return _client.from('categories').stream(primaryKey: ['id']);
+    return _client
+        .from('categories')
+        .stream(primaryKey: ['id']).order('id', ascending: true);
   }
 
   Future<Either<DatabaseFailure, CategoryModel>> updateCategory(
