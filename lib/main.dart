@@ -9,6 +9,15 @@ import 'package:admin_dashboard/src/feature/auth/data/datasource/auth_datasource
 import 'package:admin_dashboard/src/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:admin_dashboard/src/feature/auth/presentation/screen/signin_screen.dart';
+import 'package:admin_dashboard/src/feature/category/business/repository/category_repository.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_add_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_categories_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_get_category_by_id_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_update_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/business/usecase/category_upload_image_usecase.dart';
+import 'package:admin_dashboard/src/feature/category/data/datasource/category_datasource.dart';
+import 'package:admin_dashboard/src/feature/category/data/repository/category_repository_impl.dart';
+import 'package:admin_dashboard/src/feature/category/presentation/category_provider/category_provider.dart';
 import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -32,6 +41,8 @@ Future<void> main() async {
   final supabaseClient = Supabase.instance;
   AuthRepository authRepository =
       AuthRepositoryImpl(dataSource: AuthDataSource());
+  CategoryRepository categoryRepository =
+      CategoryRepositoryImpl(dataSource: CategoryDataSource());
 
   runApp(
     MultiProvider(
@@ -49,9 +60,20 @@ Future<void> main() async {
                 AuthOnAuthOnAuthChangeUseCase(authRepository: authRepository),
           ),
         ),
-        // Provider<BranchProvider>(create: (_) => BranchProvider()),
-        // Provider<OrderProvider>(create: (_) => OrderProvider()),
-        // Provider<LocationProvider>(create: (_) => LocationProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(
+            categoryAddUseCase:
+                CategoryAddUseCase(categoryRepository: categoryRepository),
+            categoryGetCategoriesUseCase: CategoryGetCategoriesUseCase(
+                categoryRepository: categoryRepository),
+            categoryGetCategoryByIdUseCase: CategoryGetCategoryByIdUseCase(
+                categoryRepository: categoryRepository),
+            categoryUpdateCategoryUseCase:
+                CategoryUpdateUseCase(categoryRepository: categoryRepository),
+            categoryUploadImageUseCase: CategoryUploadImageUseCase(
+                categoryRepository: categoryRepository),
+          ),
+        ),
       ],
       child: MyApp(),
     ),

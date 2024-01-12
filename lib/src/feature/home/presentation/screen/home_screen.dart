@@ -13,6 +13,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   PageController pageController = PageController(initialPage: 0);
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               CategoryScreen(),
               CategoryListScreen(),
-              CategoryAddScreen(),
+              CategoryAddScreen(pageController: pageController),
               Container(
                 child: Center(
                   child: Text('Products'),

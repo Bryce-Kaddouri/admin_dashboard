@@ -24,3 +24,13 @@ class AuthFailure extends Failure {
   AuthFailure({required String errorMessage})
       : super(errorMessage: errorMessage);
 }
+
+class StorageFailure extends Failure {
+  StorageFailure({required String errorMessage})
+      : super(errorMessage: errorMessage);
+}
+
+class DatabaseFailure extends Failure {
+  DatabaseFailure({required String errorMessage})
+      : super(errorMessage: errorMessage);
+}
