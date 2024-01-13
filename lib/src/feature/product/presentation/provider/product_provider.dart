@@ -73,6 +73,15 @@ class ProductProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  int _selectedIndexCategory = 0;
+
+  int get selectedIndexCategory => _selectedIndexCategory;
+
+  void setSelectedIndexCategory(int value) {
+    _selectedIndexCategory = value;
+    notifyListeners();
+  }
+
   TextEditingController _searchController = TextEditingController();
 
   TextEditingController get searchController => _searchController;

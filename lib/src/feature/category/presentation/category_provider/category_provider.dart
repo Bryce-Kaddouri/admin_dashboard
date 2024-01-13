@@ -78,6 +78,33 @@ class CategoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  List<CategoryModel> _categoryList = [];
+
+  List<CategoryModel> get categoryList => _categoryList;
+
+  void setCategoryList(List<CategoryModel> value) {
+    _categoryList = value;
+    notifyListeners();
+  }
+
+  void getCategories() async {
+    _isLoading = true;
+    notifyListeners();
+    List<CategoryModel> categoryList = [];
+    final result = await categoryGetCategoriesUseCase.call(NoParams());
+
+    await result.fold((l) async {
+      _addCategoryErrorMessage = l.errorMessage;
+    }, (r) async {
+      print(r);
+      categoryList = r;
+    });
+
+    _categoryList = categoryList;
+    _isLoading = false;
+    notifyListeners();
+  }
+
   Future<XFile?> pickImage() async {
     final ImagePicker picker = ImagePicker();
     ImageSource source = ImageSource.gallery;

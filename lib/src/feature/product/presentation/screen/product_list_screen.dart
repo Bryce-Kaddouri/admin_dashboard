@@ -137,7 +137,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   child: Icon(Icons.add, color: Colors.white),
                   onTap: () {
                     print('add');
-                    widget.mainPageController.jumpToPage(3);
+                    widget.mainPageController.jumpToPage(7);
                     context.read<ProductProvider>().setProductModel(null);
                   },
                 ),
