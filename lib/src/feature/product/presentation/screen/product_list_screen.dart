@@ -81,7 +81,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     constraints: BoxConstraints(
                       maxHeight: 40,
                     ),
-                    hintText: 'Search a category ...',
+                    hintText: 'Search a product ...',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -137,8 +137,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   child: Icon(Icons.add, color: Colors.white),
                   onTap: () {
                     print('add');
-                    widget.mainPageController.jumpToPage(7);
                     context.read<ProductProvider>().setProductModel(null);
+
+                    widget.mainPageController.jumpToPage(7);
                   },
                 ),
               ),
@@ -211,7 +212,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                               if (correctIndex > categories!.length - 1) {
                                 return Container();
                               }
-                              final category = ProductModel.fromJson(
+                              final product = ProductModel.fromJson(
                                   categories![correctIndex]);
                               print('index: $index');
                               print('indexPage: $indexPage');
@@ -234,7 +235,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                           child: Container(
                                             alignment: Alignment.center,
                                             child: Text(
-                                              '${category.id}',
+                                              '${product.id}',
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.bold,
@@ -255,7 +256,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                             future: context
                                                 .read<ProductProvider>()
                                                 .getSignedUrl(
-                                                    category?.imageUrl ?? ''),
+                                                    product?.imageUrl ?? ''),
                                             builder: (context, snapshot) {
                                               print(
                                                   'snapshot stqte: ${snapshot.connectionState}');
@@ -292,8 +293,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                       ],
                                     ),
                                   ),
-                                  title: Text(category?.name ?? ''),
-                                  subtitle: Text(category?.description ?? ''),
+                                  title: Text(product?.name ?? ''),
+                                  subtitle: Text(product?.description ?? ''),
                                   trailing: Container(
                                     height: 50,
                                     width: 120,
@@ -316,7 +317,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                   .jumpToPage(8);
                                               context
                                                   .read<ProductProvider>()
-                                                  .setProductModel(category);
+                                                  .setProductModel(product);
                                             },
                                           ),
                                         ),
@@ -335,7 +336,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                             onTap: () {
                                               print('delete');
                                               print(
-                                                  'category id: ${category.id}');
+                                                  'category id: ${product.id}');
                                               Get.defaultDialog(
                                                 contentPadding:
                                                     EdgeInsets.all(20),
@@ -359,7 +360,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                   bool res = await context
                                                       .read<ProductProvider>()
                                                       .deleteProduct(
-                                                          category.id);
+                                                          product.id);
                                                   Get.back();
                                                   if (res) {
                                                     Get.snackbar(

@@ -1,6 +1,10 @@
+import 'package:admin_dashboard/src/feature/product/presentation/provider/product_provider.dart';
 import 'package:collapsible_sidebar/collapsible_sidebar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:provider/provider.dart';
 
 class SideBarWidget extends StatefulWidget {
   final int selectedIndex;
@@ -77,7 +81,8 @@ class _SideBarWidgetState extends State<SideBarWidget> {
           'index': 7,
           'icon': const Icon(Icons.fiber_manual_record,
               color: Colors.blue, size: 10),
-          'onTap': () => print('Add Product'),
+          'onTap': () =>
+              Get.context!.read<ProductProvider>().setProductModel(null),
           'isVisibled': true,
         },
       ],

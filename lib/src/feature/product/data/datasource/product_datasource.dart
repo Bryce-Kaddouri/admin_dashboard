@@ -93,12 +93,12 @@ class ProductDataSource {
       ProductModel productModel) async {
     try {
       productModel = productModel.copyWith(updatedAt: DateTime.now());
-      print('categoryModel from update datasource');
+      print('productModel from update datasource');
       print(productModel.toJson());
       Map<String, dynamic> productMap = productModel.toJson();
       productMap.removeWhere((key, value) => key == 'id');
       List<Map<String, dynamic>> response = await _client
-          .from('categories')
+          .from('products')
           .update(productMap)
           .eq('id', productModel.id)
           .select();
