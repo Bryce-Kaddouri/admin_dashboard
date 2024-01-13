@@ -30,41 +30,31 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   String imgUrl = '';
 
+  void _initData() async {
+    context.read<CategoryProvider>().getCategories();
+    print('initState');
+
+    if (context.read<ProductProvider>().productModel != null) {
+      String? imageUrl = await context.read<ProductProvider>().getSignedUrl(
+          context
+              .read<ProductProvider>()
+              .productModel!
+              .imageUrl
+              .split('/')
+              .last);
+
+      setState(() {
+        imgUrl = imageUrl!;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      context.read<CategoryProvider>().getCategories();
-      print('initState');
-      print(context.read<ProductProvider>().productModel?.toJson());
-      if (context.read<ProductProvider>().productModel != null) {
-        String? imageUrl = await context.read<ProductProvider>().getSignedUrl(
-            context
-                .read<ProductProvider>()
-                .productModel!
-                .imageUrl
-                .split('/')
-                .last);
-        print('imageUrl');
-        print(imageUrl);
-        print('productModel');
-        setState(() {
-          imgUrl = imageUrl!;
-        });
-        _formKey.currentState!.patchValue({
 /*
-          'image': imageUrl,
+    _initData();
 */
-          'name': context.read<ProductProvider>().productModel!.name,
-          'description':
-              context.read<ProductProvider>().productModel!.description,
-          'price':
-              context.read<ProductProvider>().productModel!.price.toString(),
-          'category_id':
-              context.read<ProductProvider>().productModel!.categoryId,
-        });
-      }
-    });
   }
 
   @override
@@ -75,7 +65,10 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
       child: Container(
         child: Column(
           children: [
-            Text('Add Product',
+            Text(
+                context.watch<ProductProvider>().productModel == null
+                    ? 'Add Product'
+                    : 'Update Product',
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -150,6 +143,13 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                       ])),
                   SizedBox(height: 40),
                   FormBuilderTextField(
+                    initialValue:
+                        context.watch<ProductProvider>().productModel == null
+                            ? null
+                            : context
+                                .watch<ProductProvider>()
+                                .productModel!
+                                .name,
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -233,6 +233,14 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                   SizedBox(height: 40),
                   FormBuilderTextField(
+                    initialValue:
+                        context.watch<ProductProvider>().productModel == null
+                            ? null
+                            : context
+                                .watch<ProductProvider>()
+                                .productModel!
+                                .price
+                                .toString(),
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -322,6 +330,13 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                   SizedBox(height: 40),
                   FormBuilderTextField(
+                    initialValue:
+                        context.watch<ProductProvider>().productModel == null
+                            ? null
+                            : context
+                                .watch<ProductProvider>()
+                                .productModel!
+                                .description,
                     name: 'description',
                     maxLines: 5,
                     decoration: InputDecoration(
@@ -391,6 +406,13 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                   ),
                   SizedBox(height: 40),
                   FormBuilderDropdown<int>(
+                    initialValue:
+                        context.watch<ProductProvider>().productModel == null
+                            ? null
+                            : context
+                                .watch<ProductProvider>()
+                                .productModel!
+                                .categoryId,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                     ]),
