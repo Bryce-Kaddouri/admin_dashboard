@@ -21,6 +21,17 @@ import 'package:admin_dashboard/src/feature/category/data/datasource/category_da
 import 'package:admin_dashboard/src/feature/category/data/repository/category_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/category_provider/category_provider.dart';
 import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
+import 'package:admin_dashboard/src/feature/product/business/repository/product_repository.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_add_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_delete_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_get_product_by_id_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_get_products_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_get_signed_url_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_update_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/business/usecase/product_upload_image_usecase.dart';
+import 'package:admin_dashboard/src/feature/product/data/datasource/product_datasource.dart';
+import 'package:admin_dashboard/src/feature/product/data/repository/product_repository_impl.dart';
+import 'package:admin_dashboard/src/feature/product/presentation/provider/product_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -45,6 +56,8 @@ Future<void> main() async {
       AuthRepositoryImpl(dataSource: AuthDataSource());
   CategoryRepository categoryRepository =
       CategoryRepositoryImpl(dataSource: CategoryDataSource());
+  ProductRepository productRepository =
+      ProductRepositoryImpl(dataSource: ProductDataSource());
 
   runApp(
     MultiProvider(
@@ -62,7 +75,7 @@ Future<void> main() async {
                 AuthOnAuthOnAuthChangeUseCase(authRepository: authRepository),
           ),
         ),
-        ChangeNotifierProvider(
+        ChangeNotifierProvider<CategoryProvider>(
           create: (context) => CategoryProvider(
             categoryAddUseCase:
                 CategoryAddUseCase(categoryRepository: categoryRepository),
@@ -78,6 +91,24 @@ Future<void> main() async {
                 categoryRepository: categoryRepository),
             categoryDeleteUseCase:
                 CategoryDeleteUseCase(categoryRepository: categoryRepository),
+          ),
+        ),
+        ChangeNotifierProvider<ProductProvider>(
+          create: (context) => ProductProvider(
+            productAddUseCase:
+                ProductAddUseCase(productRepository: productRepository),
+            productGetProductsUseCase:
+                ProductGetProductsUseCase(productRepository: productRepository),
+            productGetProductByIdUseCase: ProductGetProductByIdUseCase(
+                productRepository: productRepository),
+            productUpdateProductUseCase:
+                ProductUpdateUseCase(productRepository: productRepository),
+            productUploadImageUseCase:
+                ProductUploadImageUseCase(productRepository: productRepository),
+            productGetSignedUrlUseCase: ProductGetSignedUrlUseCase(
+                productRepository: productRepository),
+            productDeleteUseCase:
+                ProductDeleteUseCase(productRepository: productRepository),
           ),
         ),
       ],

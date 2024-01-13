@@ -2,10 +2,13 @@ import 'package:admin_dashboard/src/core/share_component/side_bar_widget.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_add_screen.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_list_screen.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_screen.dart';
+import 'package:admin_dashboard/src/feature/product/presentation/screen/product_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../category/presentation/category_provider/category_provider.dart';
+import '../../../product/presentation/screen/product_add_screen.dart';
+import '../../../product/presentation/screen/product_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -43,24 +46,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainPageController: pageController,
               ),
               CategoryAddScreen(pageController: pageController),
-              CategoryAddScreen(
-                pageController: pageController,
+              CategoryAddScreen(pageController: pageController),
+              ProductScreen(),
+              ProductListScreen(
+                mainPageController: pageController,
               ),
-              Container(
-                child: Center(
-                  child: Text('Products'),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Text('Product List'),
-                ),
-              ),
-              Container(
-                child: Center(
-                  child: Text('Add Product'),
-                ),
-              ),
+              ProductAddScreen(pageController: pageController),
+              ProductAddScreen(pageController: pageController),
               Container(
                 child: Center(
                   child: Text('Employees'),
