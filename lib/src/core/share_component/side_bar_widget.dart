@@ -104,7 +104,7 @@ class _SideBarWidgetState extends State<SideBarWidget> {
         },
         {
           'name': 'Add User',
-          'index': 10,
+          'index': 11,
           'icon': const Icon(Icons.fiber_manual_record,
               color: Colors.blue, size: 10),
           'onTap': () => print('Add User'),

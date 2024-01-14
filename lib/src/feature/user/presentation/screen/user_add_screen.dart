@@ -27,7 +27,11 @@ class UserAddScreen extends StatefulWidget {
 }
 
 class _UserAddScreenState extends State<UserAddScreen> {
-  /*final _formKey = GlobalKey<FormBuilderState>();
+  final _formKey = GlobalKey<FormBuilderState>();
+  TextEditingController _passwordController = TextEditingController();
+  TextEditingController _confirmPasswordController = TextEditingController();
+
+  /*
   String imgUrl = '';
 
   void _initData() async {
@@ -49,13 +53,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-*/ /*
-    _initData();
-*/ /*
-  }*/
+
+   */
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +66,10 @@ class _UserAddScreenState extends State<UserAddScreen> {
       child: Container(
         child: Column(
           children: [
-            Text('Add User')
-            /*  Text(
-                context.watch<ProductProvider>().productModel == null
-                    ? 'Add Product'
-                    : 'Update Product',
+            Text(
+                context.watch<UserProvider>().selectedUser == null
+                    ? 'Add User'
+                    : 'Update User',
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -80,87 +78,23 @@ class _UserAddScreenState extends State<UserAddScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  FormBuilderField<Uint8List>(
-                      builder: (FormFieldState<Uint8List> field) {
-                        return Column(
-                          children: [
-                            Text('Image'),
-                            if (field.value != null)
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                height: 200,
-                                width: 200,
-                                clipBehavior: Clip.antiAlias,
-                                child: AspectRatio(
-                                  aspectRatio: 1,
-                                  child: Image.memory(
-                                    field.value!,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              )
-                            else
-                              Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: Colors.grey[300],
-                                ),
-                                height: 200,
-                                width: 200,
-                                child: imgUrl.isEmpty
-                                    ? Icon(Icons.image)
-                                    : Image(
-                                        image: NetworkImage(imgUrl),
-                                        fit: BoxFit.fill,
-                                      ),
-                              ),
-                            const SizedBox(height: 10),
-                            MaterialButton(
-                              color: Theme.of(context).colorScheme.secondary,
-                              minWidth: 200,
-                              height: 50,
-                              onPressed: () async {
-                                XFile? result = await context
-                                    .read<ProductProvider>()
-                                    .pickImage();
-                                if (result != null) {
-                                  Uint8List bytes = await result.readAsBytes();
-                                  field.didChange(bytes);
-                                }
-                              },
-                              child: Text(field.value != null
-                                  ? 'Change Image'
-                                  : 'Pick Image'),
-                            ),
-                          ],
-                        );
-                      },
-                      name: 'image',
-                      initialValue: null,
-                      validator: FormBuilderValidators.compose([
-                        if (context.read<ProductProvider>().productModel ==
-                            null)
-                          FormBuilderValidators.required(),
-                      ])),
                   SizedBox(height: 40),
                   FormBuilderTextField(
                     initialValue:
-                        context.watch<ProductProvider>().productModel == null
+                        context.watch<UserProvider>().selectedUser == null
                             ? null
                             : context
-                                .watch<ProductProvider>()
-                                .productModel!
-                                .name,
+                                .watch<UserProvider>()
+                                .selectedUser!
+                                .userMetadata!['fName'],
                     style: TextStyle(
                       fontSize: 20,
                     ),
-                    name: 'name',
+                    name: 'f_name',
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: 'Burger',
+                      hintText: 'John',
                       hintStyle: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 20,
@@ -191,7 +125,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Name',
+                            text: 'First Name',
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontWeight: FontWeight.bold,
@@ -237,21 +171,20 @@ class _UserAddScreenState extends State<UserAddScreen> {
                   SizedBox(height: 40),
                   FormBuilderTextField(
                     initialValue:
-                        context.watch<ProductProvider>().productModel == null
+                        context.watch<UserProvider>().selectedUser == null
                             ? null
                             : context
-                                .watch<ProductProvider>()
-                                .productModel!
-                                .price
-                                .toString(),
+                                .watch<UserProvider>()
+                                .selectedUser!
+                                .userMetadata!['lName'],
                     style: TextStyle(
                       fontSize: 20,
                     ),
-                    name: 'price',
+                    name: 'l_name',
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: '3.60',
+                      hintText: 'John',
                       hintStyle: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 20,
@@ -282,7 +215,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Price',
+                            text: 'Last Name',
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontWeight: FontWeight.bold,
@@ -323,29 +256,19 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.numeric(),
                     ]),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'^\d+\.?\d{0,2}'),
-                      ),
-                    ],
                   ),
                   SizedBox(height: 40),
                   FormBuilderTextField(
                     initialValue:
-                        context.watch<ProductProvider>().productModel == null
+                        context.watch<UserProvider>().selectedUser == null
                             ? null
-                            : context
-                                .watch<ProductProvider>()
-                                .productModel!
-                                .description,
-                    name: 'description',
-                    maxLines: 5,
+                            : context.watch<UserProvider>().selectedUser!.email,
+                    name: 'email',
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: 'Description of the product ...',
+                      hintText: 'john.doe@mail.ie',
                       hintStyle: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 20,
@@ -405,24 +328,26 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                       ),
                     ),
-                    validator: FormBuilderValidators.compose([]),
-                  ),
-                  SizedBox(height: 40),
-                  FormBuilderDropdown<int>(
-                    initialValue:
-                        context.watch<ProductProvider>().productModel == null
-                            ? null
-                            : context
-                                .watch<ProductProvider>()
-                                .productModel!
-                                .categoryId,
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
+                      FormBuilderValidators.email(),
                     ]),
+                  ),
+                  SizedBox(height: 40),
+                  FormBuilderTextField(
+                    controller: _passwordController,
+                    initialValue: null,
+                    name: 'password',
+                    onChanged: (value) {
+                      _passwordController.value = TextEditingValue(
+                        text: value!,
+                        selection: _passwordController.selection,
+                      );
+                    },
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: '-- Select Category --',
+                      hintText: 'password',
                       hintStyle: TextStyle(
                         color: Colors.grey[700],
                         fontSize: 20,
@@ -453,7 +378,161 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                         child: RichText(
                           text: TextSpan(
-                            text: 'Category',
+                            text: 'Password',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.grey[300]!,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          width: 2,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                  ),
+                  SizedBox(height: 40),
+                  FormBuilderTextField(
+                    controller: _confirmPasswordController,
+                    initialValue: null,
+                    name: 'confirm_password',
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: 'Confirm Password',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: 20,
+                      ),
+                      constraints: BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      floatingLabelAlignment: FloatingLabelAlignment.start,
+                      label: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Confirm Password',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontWeight: FontWeight.bold,
+                              fontSize: 24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.grey[300]!,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          width: 2,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                      FormBuilderValidators.equal(
+                          _passwordController.value.text,
+                          errorText: 'Password not match'),
+                    ]),
+                  ),
+                  SizedBox(height: 40),
+                  FormBuilderDropdown<String>(
+                    initialValue:
+                        context.watch<UserProvider>().selectedUser == null
+                            ? null
+                            : context
+                                .watch<UserProvider>()
+                                .selectedUser!
+                                .userMetadata!['role'],
+                    validator: FormBuilderValidators.compose([
+                      FormBuilderValidators.required(),
+                    ]),
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: '-- Select Role --',
+                      hintStyle: TextStyle(
+                        color: Colors.grey[700],
+                        fontSize: 20,
+                      ),
+                      constraints: BoxConstraints(
+                        maxWidth: 500,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      floatingLabelAlignment: FloatingLabelAlignment.start,
+                      label: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
+                        child: RichText(
+                          text: TextSpan(
+                            text: 'Role',
                             style: TextStyle(
                               color: Colors.grey[700],
                               fontWeight: FontWeight.bold,
@@ -492,30 +571,19 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                       ),
                     ),
-                    name: 'category_id',
+                    name: 'role',
                     items: List.generate(
-                      context.watch<CategoryProvider>().categoryList.length,
-                      (index) => DropdownMenuItem(
-                        child: Row(
-                          children: [
-                            Text(
-                                '${context.watch<CategoryProvider>().categoryList[index].id} - '),
-                            Expanded(
-                              child: Container(
-                                child: Text(context
-                                    .watch<CategoryProvider>()
-                                    .categoryList[index]
-                                    .name),
-                              ),
-                            ),
-                          ],
+                        ['ADMIN', 'COOKER', 'SELLER', 'BOOK'].length, (index) {
+                      return DropdownMenuItem(
+                        value: ['ADMIN', 'COOKER', 'SELLER', 'BOOK'][index],
+                        child: Text(
+                          ['ADMIN', 'COOKER', 'SELLER', 'BOOK'][index],
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
-                        value: context
-                            .watch<CategoryProvider>()
-                            .categoryList[index]
-                            .id,
-                      ),
-                    ),
+                      );
+                    }),
                   ),
                 ],
               ),
@@ -527,91 +595,54 @@ class _UserAddScreenState extends State<UserAddScreen> {
               height: 50,
               onPressed: () async {
                 if (_formKey.currentState!.saveAndValidate()) {
-                  if (context.read<ProductProvider>().productModel == null) {
+                  if (context.read<UserProvider>().selectedUser == null) {
                     print(_formKey.currentState!.value);
-                    String name = _formKey.currentState!.value['name'];
-                    String? description =
-                        _formKey.currentState!.value['description'];
+                    String fName = _formKey.currentState!.value['f_name'];
+                    String lName = _formKey.currentState!.value['l_name'];
+                    String email = _formKey.currentState!.value['email'];
+                    String password = _formKey.currentState!.value['password'];
+                    String confirmPassword =
+                        _formKey.currentState!.value['confirm_password'];
+                    String role = _formKey.currentState!.value['role'];
 
-                    Uint8List image = _formKey.currentState!.value['image'];
-                    double price =
-                        double.parse(_formKey.currentState!.value['price']);
-                    int categoryId =
-                        _formKey.currentState!.value['category_id'];
-
-                    print(categoryId);
-                    print(name);
-                    String? imageUrl = await context
-                        .read<ProductProvider>()
-                        .uploadImage(image);
-                    print(imageUrl);
-                    if (imageUrl != null) {
-                      bool res = await context
-                          .read<ProductProvider>()
-                          .addProduct(
-                              name, description, imageUrl, price, categoryId);
-                      if (res) {
-                        widget.pageController.animateToPage(
-                          6,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                        Get.snackbar(
-                          'Success',
-                          'Product added successfully',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          margin: const EdgeInsets.all(10),
-                          padding: const EdgeInsets.all(10),
-                          snackPosition: SnackPosition.TOP,
-                          duration: const Duration(seconds: 3),
-                          icon: const Icon(
-                            Icons.check_circle_outline,
-                            color: Colors.white,
+                    bool res = await context
+                        .read<UserProvider>()
+                        .addUser(email, password, fName, lName, role);
+                    if (res) {
+                      widget.pageController.animateToPage(
+                        6,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                      Get.snackbar(
+                        'Success',
+                        'Product added successfully',
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white,
+                        margin: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(10),
+                        snackPosition: SnackPosition.TOP,
+                        duration: const Duration(seconds: 3),
+                        icon: const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.white,
+                        ),
+                        isDismissible: true,
+                        forwardAnimationCurve: Curves.easeOutBack,
+                        reverseAnimationCurve: Curves.easeInBack,
+                        onTap: (value) => Get.back(),
+                        mainButton: TextButton(
+                          onPressed: () => Get.back(),
+                          child: const Text(
+                            'OK',
+                            style: TextStyle(color: Colors.white),
                           ),
-                          isDismissible: true,
-                          forwardAnimationCurve: Curves.easeOutBack,
-                          reverseAnimationCurve: Curves.easeInBack,
-                          onTap: (value) => Get.back(),
-                          mainButton: TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text(
-                              'OK',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      } else {
-                        Get.snackbar(
-                          'Error',
-                          'Error adding product',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                          margin: const EdgeInsets.all(10),
-                          padding: const EdgeInsets.all(10),
-                          snackPosition: SnackPosition.TOP,
-                          duration: const Duration(seconds: 3),
-                          icon: const Icon(
-                            Icons.error_outline,
-                            color: Colors.white,
-                          ),
-                          isDismissible: true,
-                          forwardAnimationCurve: Curves.easeOutBack,
-                          reverseAnimationCurve: Curves.easeInBack,
-                          onTap: (value) => Get.back(),
-                          mainButton: TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text(
-                              'OK',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      }
+                        ),
+                      );
                     } else {
                       Get.snackbar(
                         'Error',
-                        'Error uploading image',
+                        'Error adding product',
                         backgroundColor: Colors.red,
                         colorText: Colors.white,
                         margin: const EdgeInsets.all(10),
@@ -635,243 +666,11 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         ),
                       );
                     }
-
-                    */ /* bool res = await context
-                    .read<CategoryProvider>()
-                    .addCategory(name, description, 'image');
-                if (res) {
-                  print('success');
-                } else {
-                  print('failed');
-                }*/ /*
-                  } else {
-                    print('update');
-                    print(_formKey.currentState!.value);
-                    String name = _formKey.currentState!.value['name'];
-                    String? description =
-                        _formKey.currentState!.value['description'];
-                    double price = double.parse(
-                        _formKey.currentState!.value['price'].toString());
-                    print(price);
-
-                    Uint8List? image = _formKey.currentState!.value['image'];
-                    int categoryId =
-                        _formKey.currentState!.value['category_id'];
-
-                    ProductModel initialProductModel =
-                        context.read<ProductProvider>().productModel!;
-                    ProductModel newProductModel = initialProductModel;
-
-                    if (name == initialProductModel.name &&
-                        description == initialProductModel.description &&
-                        image == null &&
-                        price == initialProductModel.price &&
-                        categoryId == initialProductModel.categoryId) {
-                      print('no changes');
-                      Get.snackbar(
-                        'Error',
-                        'No changes made',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                        margin: const EdgeInsets.all(10),
-                        padding: const EdgeInsets.all(10),
-                        snackPosition: SnackPosition.TOP,
-                        duration: const Duration(seconds: 3),
-                        icon: const Icon(
-                          Icons.error_outline,
-                          color: Colors.white,
-                        ),
-                        isDismissible: true,
-                        forwardAnimationCurve: Curves.easeOutBack,
-                        reverseAnimationCurve: Curves.easeInBack,
-                        onTap: (value) => Get.back(),
-                        mainButton: TextButton(
-                          onPressed: () => Get.back(),
-                          child: const Text(
-                            'OK',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    } else {
-                      print('changes made');
-                      if (image == null) {
-                        print('no image');
-                        if (name != newProductModel.name) {
-                          print('name changed');
-                          newProductModel =
-                              newProductModel.copyWith(name: name);
-                        } else if (description != newProductModel.description) {
-                          print('description changed');
-                          newProductModel = newProductModel.copyWith(
-                              description: description);
-                        } else if (price != newProductModel.price) {
-                          print('price changed');
-                          newProductModel =
-                              newProductModel.copyWith(price: price);
-                        } else if (categoryId != newProductModel.categoryId) {
-                          newProductModel = newProductModel.copyWith(
-                            categoryId: categoryId,
-                          );
-                        }
-                      } else {
-                        print('image changed');
-                        String? imageUrl = await context
-                            .read<ProductProvider>()
-                            .uploadImage(image);
-                        print(imageUrl);
-                        if (imageUrl != null) {
-                          print('image uploaded');
-                          newProductModel =
-                              newProductModel.copyWith(imageUrl: imageUrl);
-                          if (name != newProductModel.name) {
-                            print('name changed');
-                            newProductModel =
-                                newProductModel.copyWith(name: name);
-                          } else if (description !=
-                              newProductModel.description) {
-                            print('description changed');
-                            newProductModel = newProductModel.copyWith(
-                                description: description);
-                          } else if (price != newProductModel.price) {
-                            newProductModel.copyWith(price: price);
-                          } else if (categoryId != newProductModel.categoryId) {
-                            newProductModel.copyWith(categoryId: categoryId);
-                          }
-                        } else {
-                          Get.snackbar(
-                            'Error',
-                            'Error uploading image',
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.all(10),
-                            snackPosition: SnackPosition.TOP,
-                            duration: const Duration(seconds: 3),
-                            icon: const Icon(
-                              Icons.error_outline,
-                              color: Colors.white,
-                            ),
-                            isDismissible: true,
-                            forwardAnimationCurve: Curves.easeOutBack,
-                            reverseAnimationCurve: Curves.easeInBack,
-                            onTap: (value) => Get.back(),
-                            mainButton: TextButton(
-                              onPressed: () => Get.back(),
-                              child: const Text(
-                                'OK',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          );
-                        }
-                      }
-                      print('test datas');
-                      print(newProductModel.toJson());
-                      ProductModel? updateRes = await context
-                          .read<ProductProvider>()
-                          .updateProduct(newProductModel);
-                      if (updateRes != null) {
-                        print('success');
-                        Get.snackbar(
-                          'Success',
-                          'Product updated successfully',
-                          backgroundColor: Colors.green,
-                          colorText: Colors.white,
-                          margin: const EdgeInsets.all(10),
-                          padding: const EdgeInsets.all(10),
-                          snackPosition: SnackPosition.TOP,
-                          duration: const Duration(seconds: 3),
-                          icon: const Icon(
-                            Icons.check_circle_outline,
-                            color: Colors.white,
-                          ),
-                          isDismissible: true,
-                          forwardAnimationCurve: Curves.easeOutBack,
-                          reverseAnimationCurve: Curves.easeInBack,
-                          onTap: (value) => Get.back(),
-                          mainButton: TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text(
-                              'OK',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                        widget.pageController.animateToPage(
-                          6,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      } else {
-                        print('failed');
-                        Get.snackbar(
-                          'Error',
-                          'Error updating product',
-                          backgroundColor: Colors.red,
-                          colorText: Colors.white,
-                          margin: const EdgeInsets.all(10),
-                          padding: const EdgeInsets.all(10),
-                          snackPosition: SnackPosition.TOP,
-                          duration: const Duration(seconds: 3),
-                          icon: const Icon(
-                            Icons.error_outline,
-                            color: Colors.white,
-                          ),
-                          isDismissible: true,
-                          forwardAnimationCurve: Curves.easeOutBack,
-                          reverseAnimationCurve: Curves.easeInBack,
-                          onTap: (value) => Get.back(),
-                          mainButton: TextButton(
-                            onPressed: () => Get.back(),
-                            child: const Text(
-                              'OK',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        );
-                      }
-                      print(newProductModel.toJson());
-                    }
-                  }
-                } else {
-                  _formKey.currentState!.save();
-                  if (_formKey.currentState!.value['image'] == null) {
-                    Get.snackbar(
-                      'Error',
-                      'Please pick an image',
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(10),
-                      snackPosition: SnackPosition.TOP,
-                      duration: const Duration(seconds: 3),
-                      icon: const Icon(
-                        Icons.error_outline,
-                        color: Colors.white,
-                      ),
-                      isDismissible: true,
-                      forwardAnimationCurve: Curves.easeOutBack,
-                      reverseAnimationCurve: Curves.easeInBack,
-                      onTap: (value) => Get.back(),
-                      mainButton: TextButton(
-                        onPressed: () => Get.back(),
-                        child: const Text(
-                          'OK',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    );
                   }
                 }
               },
-              child: context.watch<ProductProvider>().isLoading
-                  ? const CircularProgressIndicator(
-                      color: Colors.white,
-                    )
-                  : Text('Submit'),
             ),
-            SizedBox(height: 100),*/
+            SizedBox(height: 100),
           ],
         ),
       ),
