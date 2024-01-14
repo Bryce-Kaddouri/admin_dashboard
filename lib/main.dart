@@ -32,6 +32,15 @@ import 'package:admin_dashboard/src/feature/product/business/usecase/product_upl
 import 'package:admin_dashboard/src/feature/product/data/datasource/product_datasource.dart';
 import 'package:admin_dashboard/src/feature/product/data/repository/product_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/product/presentation/provider/product_provider.dart';
+import 'package:admin_dashboard/src/feature/user/business/repository/user_repository.dart';
+import 'package:admin_dashboard/src/feature/user/business/usecase/user_add_usecase.dart';
+import 'package:admin_dashboard/src/feature/user/business/usecase/user_delete_usecase.dart';
+import 'package:admin_dashboard/src/feature/user/business/usecase/user_get_user_by_id_usecase.dart';
+import 'package:admin_dashboard/src/feature/user/business/usecase/user_get_users_usecase.dart';
+import 'package:admin_dashboard/src/feature/user/business/usecase/user_update_usecase.dart';
+import 'package:admin_dashboard/src/feature/user/data/datasource/user_datasource.dart';
+import 'package:admin_dashboard/src/feature/user/data/repository/user_repository_impl.dart';
+import 'package:admin_dashboard/src/feature/user/presentation/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -58,6 +67,8 @@ Future<void> main() async {
       CategoryRepositoryImpl(dataSource: CategoryDataSource());
   ProductRepository productRepository =
       ProductRepositoryImpl(dataSource: ProductDataSource());
+  UserRepository userRepository =
+      UserRepositoryImpl(dataSource: UserDataSource());
 
   runApp(
     MultiProvider(
@@ -109,6 +120,19 @@ Future<void> main() async {
                 productRepository: productRepository),
             productDeleteUseCase:
                 ProductDeleteUseCase(productRepository: productRepository),
+          ),
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (context) => UserProvider(
+            userAddUseCase: UserAddUseCase(userRepository: userRepository),
+            userGetUsersUseCase:
+                UserGetUsersUseCase(userRepository: userRepository),
+            userGetUserByIdUseCase:
+                UserGetUserByIdUseCase(userRepository: userRepository),
+            userUpdateUserUseCase:
+                UserUpdateUseCase(userRepository: userRepository),
+            userDeleteUseCase:
+                UserDeleteUseCase(userRepository: userRepository),
           ),
         ),
       ],

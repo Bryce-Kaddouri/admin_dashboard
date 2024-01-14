@@ -3,6 +3,7 @@ import 'package:admin_dashboard/src/feature/category/presentation/screen/categor
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_list_screen.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_screen.dart';
 import 'package:admin_dashboard/src/feature/product/presentation/screen/product_screen.dart';
+import 'package:admin_dashboard/src/feature/user/presentation/screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: 0,
         body: Container(
           child: PageView(
+            allowImplicitScrolling: false,
             controller: pageController,
             children: [
               Container(
@@ -58,11 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Text('Employees'),
                 ),
               ),
-              Container(
-                child: Center(
-                  child: Text('Employee List'),
-                ),
-              ),
+              UserListScreen(mainPageController: pageController),
               Container(
                 child: Center(
                   child: Text('Add Employee'),

@@ -92,11 +92,11 @@ class _SideBarWidgetState extends State<SideBarWidget> {
     },
     {
       'name': 'Users',
-      'index': 8,
+      'index': 9,
       'children': [
         {
           'name': 'User List',
-          'index': 9,
+          'index': 10,
           'icon': const Icon(Icons.fiber_manual_record,
               color: Colors.blue, size: 10),
           'onTap': () => print('User List'),
