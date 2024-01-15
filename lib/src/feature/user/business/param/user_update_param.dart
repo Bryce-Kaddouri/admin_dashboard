@@ -1,20 +1,20 @@
 class UserUpdateParam {
   final String uid;
-  final String? email;
-  final String? password;
-  final String? fName;
-  final String? lName;
-  final bool? isAvailable;
-  final String? role;
+  final String email;
+  final String password;
+  final String fName;
+  final String lName;
+  final bool isAvailable;
+  final String role;
 
   UserUpdateParam({
     required this.uid,
-    this.email,
-    this.password,
-    this.fName,
-    this.lName,
-    this.isAvailable,
-    this.role,
+    required this.email,
+    required this.password,
+    required this.fName,
+    required this.lName,
+    required this.isAvailable,
+    required this.role,
   });
 
   Map<String, dynamic> toJson() {

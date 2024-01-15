@@ -253,8 +253,17 @@ class UserProvider with ChangeNotifier {
     return user;
   }
 
-  Future<User?> updateUser(String uid, String? email, String? password,
-      String? fName, String? lName, String? role, bool? isAvailable) async {
+  Future<User?> updateUser(String uid, String email, String password,
+      String fName, String lName, String role, bool isAvailable) async {
+    print('updateUser from provier');
+    print(uid);
+    print(email);
+    print(password);
+    print(fName);
+    print(lName);
+    print(role);
+    print(isAvailable);
+
     _isLoading = true;
     notifyListeners();
     User? user = await getUserById(uid);

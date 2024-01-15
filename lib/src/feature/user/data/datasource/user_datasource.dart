@@ -94,11 +94,17 @@ class UserDataSource {
   Future<Either<DatabaseFailure, User>> updateUser(
       UserUpdateParam param) async {
     try {
+      print('updateUser --');
+      print(param.toJson());
       UserResponse response = await _supaAdminClient.auth.admin.updateUserById(
         param.uid,
         attributes: AdminUserAttributes(
           email: param.email,
+          password: param.password.isEmpty ? null : param.password,
+
+/*
           password: param.password,
+*/
           userMetadata: {
             'fName': param.fName,
             'lName': param.lName,

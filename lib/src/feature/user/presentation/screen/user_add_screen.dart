@@ -9,6 +9,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../category/data/model/category_model.dart';
 import '../../data/model/user_model.dart';
@@ -411,7 +412,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
                       ),
                     ),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
+                      if (context.watch<UserProvider>().selectedUser == null)
+                        FormBuilderValidators.required(),
                     ]),
                   ),
                   SizedBox(height: 40),
@@ -492,7 +494,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
                       ),
                     ),
                     validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
+                      if (context.watch<UserProvider>().selectedUser == null)
+                        FormBuilderValidators.required(),
                       // reg exp for confirm password should be same as password by using TextEditingController
                       // RegExp(_passwordController.text)
                     ]),
@@ -505,7 +508,7 @@ class _UserAddScreenState extends State<UserAddScreen> {
                             : context
                                 .watch<UserProvider>()
                                 .selectedUser!
-                                .userMetadata!['role'],
+                                .appMetadata!['role'],
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
                     ]),
@@ -628,6 +631,37 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         .read<UserProvider>()
                         .addUser(email, password, fName, lName, role);
                     if (res) {
+                      widget.pageController.animateToPage(
+                        10,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
+                    }
+                  } else {
+                    print('-' * 100);
+                    print(_formKey.currentState!.value);
+                    String fName = _formKey.currentState!.value['f_name'];
+                    String lName = _formKey.currentState!.value['l_name'];
+                    String email = _formKey.currentState!.value['email'];
+                    String password = _formKey.currentState!.value['password'];
+                    String confirmPassword =
+                        _formKey.currentState!.value['confirm_password'];
+
+                    // check if password and confirm password are the same
+                    if (password != confirmPassword) {
+                      _formKey.currentState?.fields['confirm_password']
+                          ?.invalidate('Passwords do not match');
+                      return;
+                    }
+
+                    print(_formKey.currentState!.value);
+
+                    String role = _formKey.currentState!.value['role'];
+                    String uid = context.read<UserProvider>().selectedUser!.id;
+
+                    User? res = await context.read<UserProvider>().updateUser(
+                        uid, email, password, fName, lName, role, true);
+                    if (res != null) {
                       widget.pageController.animateToPage(
                         10,
                         duration: const Duration(milliseconds: 500),

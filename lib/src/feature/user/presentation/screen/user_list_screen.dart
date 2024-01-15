@@ -319,7 +319,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                             onTap: () {
                                               print('edit');
                                               widget.mainPageController
-                                                  .jumpToPage(8);
+                                                  .jumpToPage(11);
                                               context
                                                   .read<UserProvider>()
                                                   .setSelectedUser(user);
