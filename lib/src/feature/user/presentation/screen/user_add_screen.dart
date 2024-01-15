@@ -339,10 +339,13 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     initialValue: null,
                     name: 'password',
                     onChanged: (value) {
-                      _passwordController.value = TextEditingValue(
-                        text: value!,
-                        selection: _passwordController.selection,
-                      );
+                      if (_confirmPasswordController.text != value) {
+                        _formKey.currentState?.fields['confirm_password']
+                            ?.invalidate('Passwords do not match');
+                      } else {
+                        _formKey.currentState?.fields['confirm_password']
+                            ?.validate();
+                      }
                     },
                     decoration: InputDecoration(
                       fillColor: Colors.white,
@@ -416,6 +419,15 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     controller: _confirmPasswordController,
                     initialValue: null,
                     name: 'confirm_password',
+                    onChanged: (value) {
+                      if (_passwordController.text != value) {
+                        _formKey.currentState?.fields['confirm_password']
+                            ?.invalidate('Passwords do not match');
+                      } else {
+                        _formKey.currentState?.fields['confirm_password']
+                            ?.validate();
+                      }
+                    },
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -481,9 +493,8 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     ),
                     validator: FormBuilderValidators.compose([
                       FormBuilderValidators.required(),
-                      FormBuilderValidators.equal(
-                          _passwordController.value.text,
-                          errorText: 'Password not match'),
+                      // reg exp for confirm password should be same as password by using TextEditingController
+                      // RegExp(_passwordController.text)
                     ]),
                   ),
                   SizedBox(height: 40),
@@ -603,6 +614,14 @@ class _UserAddScreenState extends State<UserAddScreen> {
                     String password = _formKey.currentState!.value['password'];
                     String confirmPassword =
                         _formKey.currentState!.value['confirm_password'];
+
+                    // check if password and confirm password are the same
+                    if (password != confirmPassword) {
+                      _formKey.currentState?.fields['confirm_password']
+                          ?.invalidate('Passwords do not match');
+                      return;
+                    }
+
                     String role = _formKey.currentState!.value['role'];
 
                     bool res = await context
@@ -610,60 +629,9 @@ class _UserAddScreenState extends State<UserAddScreen> {
                         .addUser(email, password, fName, lName, role);
                     if (res) {
                       widget.pageController.animateToPage(
-                        6,
+                        10,
                         duration: const Duration(milliseconds: 500),
                         curve: Curves.easeInOut,
-                      );
-                      Get.snackbar(
-                        'Success',
-                        'Product added successfully',
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white,
-                        margin: const EdgeInsets.all(10),
-                        padding: const EdgeInsets.all(10),
-                        snackPosition: SnackPosition.TOP,
-                        duration: const Duration(seconds: 3),
-                        icon: const Icon(
-                          Icons.check_circle_outline,
-                          color: Colors.white,
-                        ),
-                        isDismissible: true,
-                        forwardAnimationCurve: Curves.easeOutBack,
-                        reverseAnimationCurve: Curves.easeInBack,
-                        onTap: (value) => Get.back(),
-                        mainButton: TextButton(
-                          onPressed: () => Get.back(),
-                          child: const Text(
-                            'OK',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      );
-                    } else {
-                      Get.snackbar(
-                        'Error',
-                        'Error adding product',
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
-                        margin: const EdgeInsets.all(10),
-                        padding: const EdgeInsets.all(10),
-                        snackPosition: SnackPosition.TOP,
-                        duration: const Duration(seconds: 3),
-                        icon: const Icon(
-                          Icons.error_outline,
-                          color: Colors.white,
-                        ),
-                        isDismissible: true,
-                        forwardAnimationCurve: Curves.easeOutBack,
-                        reverseAnimationCurve: Curves.easeInBack,
-                        onTap: (value) => Get.back(),
-                        mainButton: TextButton(
-                          onPressed: () => Get.back(),
-                          child: const Text(
-                            'OK',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
                       );
                     }
                   }

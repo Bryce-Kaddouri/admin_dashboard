@@ -176,7 +176,7 @@ class _UserListScreenState extends State<UserListScreen> {
                     print('add');
                     context.read<UserProvider>().setSelectedUser(null);
 
-                    widget.mainPageController.jumpToPage(8);
+                    widget.mainPageController.jumpToPage(10);
                   },
                 ),
               ),

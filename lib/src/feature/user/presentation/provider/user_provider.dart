@@ -1,5 +1,7 @@
 import 'package:admin_dashboard/src/feature/user/business/param/user_update_param.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../../core/data/usecase/usecase.dart';
@@ -31,6 +33,13 @@ class UserProvider with ChangeNotifier {
 
   void setLoading(bool value) {
     _isLoading = value;
+    notifyListeners();
+  }
+
+  String _password = '';
+  String get password => _password;
+  void setPassword(String value) {
+    _password = value;
     notifyListeners();
   }
 
@@ -168,9 +177,59 @@ class UserProvider with ChangeNotifier {
 
     await result.fold((l) async {
       print(l.errorMessage);
+      Get.snackbar(
+        'Error',
+        l.errorMessage,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 3),
+        icon: const Icon(
+          Icons.error_outline,
+          color: Colors.white,
+        ),
+        isDismissible: true,
+        forwardAnimationCurve: Curves.easeOutBack,
+        reverseAnimationCurve: Curves.easeInBack,
+        onTap: (value) => Get.back(),
+        mainButton: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text(
+            'OK',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
       isSuccess = false;
     }, (r) async {
       print(r.toJson());
+      Get.snackbar(
+        'Success',
+        'User added successfully',
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        margin: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        snackPosition: SnackPosition.TOP,
+        duration: const Duration(seconds: 3),
+        icon: const Icon(
+          Icons.check_circle_outline,
+          color: Colors.white,
+        ),
+        isDismissible: true,
+        forwardAnimationCurve: Curves.easeOutBack,
+        reverseAnimationCurve: Curves.easeInBack,
+        onTap: (value) => Get.back(),
+        mainButton: TextButton(
+          onPressed: () => Get.back(),
+          child: const Text(
+            'OK',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+      );
       isSuccess = true;
     });
 
