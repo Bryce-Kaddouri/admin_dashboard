@@ -8,7 +8,6 @@ import 'package:admin_dashboard/src/feature/auth/business/usecase/auth_on_auth_c
 import 'package:admin_dashboard/src/feature/auth/data/datasource/auth_datasource.dart';
 import 'package:admin_dashboard/src/feature/auth/data/repository/auth_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
-import 'package:admin_dashboard/src/feature/auth/presentation/screen/signin_screen.dart';
 import 'package:admin_dashboard/src/feature/category/business/repository/category_repository.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_add_usecase.dart';
 import 'package:admin_dashboard/src/feature/category/business/usecase/category_delete_usecase.dart';
@@ -20,7 +19,6 @@ import 'package:admin_dashboard/src/feature/category/business/usecase/category_u
 import 'package:admin_dashboard/src/feature/category/data/datasource/category_datasource.dart';
 import 'package:admin_dashboard/src/feature/category/data/repository/category_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/category/presentation/category_provider/category_provider.dart';
-import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
 import 'package:admin_dashboard/src/feature/product/business/repository/product_repository.dart';
 import 'package:admin_dashboard/src/feature/product/business/usecase/product_add_usecase.dart';
 import 'package:admin_dashboard/src/feature/product/business/usecase/product_delete_usecase.dart';
@@ -43,10 +41,8 @@ import 'package:admin_dashboard/src/feature/user/data/repository/user_repository
 import 'package:admin_dashboard/src/feature/user/presentation/provider/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:get/get_navigation/src/routes/default_route.dart';
-import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -146,10 +142,15 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
 
+  GoRouter router = RouterHelper().getRouter();
+
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      routingCallback: (routing) {
+    return GetMaterialApp.router(
+      routerDelegate: router.routerDelegate,
+      routeInformationParser: router.routeInformationParser,
+      routeInformationProvider: router.routeInformationProvider,
+      /* routingCallback: (routing) {
         print('route: ${routing?.current}');
 
         if (routing?.current == '/login') {
@@ -161,8 +162,8 @@ class MyApp extends StatelessWidget {
             routing?.current = '/login';
           }
         }
-      },
-      getPages: Routes().getPages,
+      },*/
+      /*getPages: Routes().getPages,
       initialRoute: '/login',
       home: StreamBuilder<AuthState>(
         stream: context.read<AuthProvider>().onAuthStateChange(),
@@ -182,7 +183,7 @@ class MyApp extends StatelessWidget {
             ),
           );
         },
-      ),
+      ),*/
     );
   }
 }
