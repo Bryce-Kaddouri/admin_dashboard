@@ -5,8 +5,10 @@ import 'package:admin_dashboard/src/feature/product/presentation/screen/product_
 import 'package:admin_dashboard/src/feature/user/presentation/screen/user_add_screen.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/share_component/custom_side_bar.dart';
+import '../provider/home_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   int currentIndex;
@@ -17,9 +19,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
-    with SingleTickerProviderStateMixin {
-  bool isCollapsed = true;
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  /* bool isCollapsed = true;*/
 
   late PageController pageController;
 
@@ -29,6 +30,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     pageController = PageController(initialPage: widget.currentIndex);
+    print('isCollapsed: ${context.read<HomeProvider>().isCollapsed}');
   }
 
   @override
@@ -38,7 +40,6 @@ class _HomeScreenState extends State<HomeScreen>
         child: Row(
           children: [
             SideBarCustomWidget(
-              sideBarIsCollapsed: isCollapsed,
               selectedIndex: widget.currentIndex,
             ),
             Expanded(

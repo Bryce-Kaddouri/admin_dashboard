@@ -14,7 +14,6 @@ class CategoryScreen extends StatelessWidget {
       child: Row(
         children: [
           SideBarCustomWidget(
-            sideBarIsCollapsed: isCollapsed,
             selectedIndex: 1,
           ),
         ],

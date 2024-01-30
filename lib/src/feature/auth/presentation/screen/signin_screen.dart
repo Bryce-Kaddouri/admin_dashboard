@@ -2,9 +2,8 @@ import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_prov
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -59,7 +58,7 @@ class SignInScreen extends StatelessWidget {
                         )
                         .then((value) {
                       if (value) {
-                        Get.offAllNamed('/home');
+                        context.go('/home');
                       } else {
                         Get.snackbar(
                           'Error',
