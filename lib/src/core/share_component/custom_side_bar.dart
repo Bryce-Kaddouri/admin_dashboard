@@ -22,7 +22,8 @@ class SideBarCustomWidget extends StatefulWidget {
   State<SideBarCustomWidget> createState() => _SideBarCustomWidgetState();
 }
 
-class _SideBarCustomWidgetState extends State<SideBarCustomWidget> with SingleTickerProviderStateMixin {
+class _SideBarCustomWidgetState extends State<SideBarCustomWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -63,12 +64,268 @@ class _SideBarCustomWidgetState extends State<SideBarCustomWidget> with SingleTi
       animation: _controller,
       builder: (context, child) {
         print(_controller.value);
-        return Container(width: 60 + _controller.value * 200, color: Colors.blue, height: MediaQuery.of(context).size.height, child: child!);
+        return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(8),
+                bottomRight: Radius.circular(12),
+              ),
+              color: Colors.blue,
+            ),
+            width: 60 + _controller.value * 200,
+            height: MediaQuery.of(context).size.height,
+            child: child!);
       },
       child: Container(
         margin: EdgeInsets.all(8),
         child: Column(
           children: [
+            Container(
+              padding: !context.watch<HomeProvider>().isCollapsed
+                  ? EdgeInsets.all(8)
+                  : EdgeInsets.all(0),
+              width: double.infinity,
+
+/*
+              margin: EdgeInsets.all(8),
+*/
+              child: !context.watch<HomeProvider>().isCollapsed
+                  ? Column(
+                      mainAxisAlignment:
+                          context.watch<HomeProvider>().isCollapsed
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 80,
+                          width: 80,
+                          child: CircleAvatar(
+                            radius: 20,
+                            backgroundImage: NetworkImage(
+                                'https://cdn-icons-png.flaticon.com/512/330/330703.png'),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          'John Smith',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Container(
+                      child: CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(
+                            'https://cdn-icons-png.flaticon.com/512/330/330703.png'),
+                      ),
+                    ),
+            ),
+            Expanded(
+              child: ListView(
+                children: [
+                  ItemSideBarWidget(
+                    children: [],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 0,
+                      mainIcon: Icon(Icons.home),
+                      mainText: 'Home',
+                      onTap: () {
+                        context.go('/home');
+                      },
+                    ),
+                  ),
+                  ItemSideBarWidget(
+                    childrenAreCollapsed:
+                        context.watch<HomeProvider>().categoryIsCollapsed,
+                    onTapChildren: () {
+                      context.read<HomeProvider>().setCategoryCollapsed(
+                          !context.read<HomeProvider>().categoryIsCollapsed);
+                    },
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 1 ||
+                          widget.selectedIndex == 2,
+                      mainIcon: Icon(Icons.category),
+                      mainText: 'Categories',
+                      onTap: () {
+                        context.go('/category-list');
+                      },
+                    ),
+                    children: [
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 1,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Category List',
+                        onTap: () {
+                          print('Category List');
+
+                          context.go('/category-list');
+                        },
+                      ),
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 2,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Add Category',
+                        onTap: () {
+                          context.go('/category-add');
+                        },
+                      ),
+                    ],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                  ),
+                  ItemSideBarWidget(
+                    childrenAreCollapsed:
+                        context.watch<HomeProvider>().productIsCollapsed,
+                    onTapChildren: () {
+                      context.read<HomeProvider>().setProductCollapsed(
+                          !context.read<HomeProvider>().productIsCollapsed);
+                    },
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 3 ||
+                          widget.selectedIndex == 4,
+                      mainIcon: Icon(Icons.cake_rounded),
+                      mainText: 'Products',
+                      onTap: () {
+                        context.go('/product-list');
+                      },
+                    ),
+                    children: [
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 3,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Product List',
+                        onTap: () {
+                          context.go('/product-list');
+                        },
+                      ),
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 4,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Add Product',
+                        onTap: () {
+                          context.go('/product-add');
+                        },
+                      ),
+                    ],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                  ),
+                  ItemSideBarWidget(
+                    children: [],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 5,
+                      mainIcon: Icon(Icons.shopping_cart_outlined),
+                      mainText: 'Orders',
+                      onTap: () {
+                        context.go('/order-list');
+                      },
+                    ),
+                  ),
+                  ItemSideBarWidget(
+                    childrenAreCollapsed:
+                        context.watch<HomeProvider>().userIsCollapsed,
+                    onTapChildren: () {
+                      context.read<HomeProvider>().setUserCollapsed(
+                          !context.read<HomeProvider>().userIsCollapsed);
+                    },
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 6 ||
+                          widget.selectedIndex == 7,
+                      mainIcon: Icon(Icons.group),
+                      mainText: 'Users',
+                      onTap: () {
+                        context.go('/user-list');
+                      },
+                    ),
+                    children: [
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 6,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'User List',
+                        onTap: () {
+                          context.go('/user-list');
+                        },
+                      ),
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 7,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Add User',
+                        onTap: () {
+                          context.go('/user-add');
+                        },
+                      ),
+                    ],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                  ),
+                  ItemSideBarWidget(
+                    childrenAreCollapsed:
+                        context.watch<HomeProvider>().bookIsCollapsed,
+                    onTapChildren: () {
+                      context.read<HomeProvider>().setBookCollapsed(
+                          !context.read<HomeProvider>().bookIsCollapsed);
+                    },
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 8 ||
+                          widget.selectedIndex == 9,
+                      mainIcon: Icon(Icons.chrome_reader_mode_rounded),
+                      mainText: 'Book',
+                      onTap: () {},
+                    ),
+                    children: [
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 8,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Page List',
+                        onTap: () {},
+                      ),
+                      SubItemSideBarWidget(
+                        isSelect: widget.selectedIndex == 9,
+                        subIcon: const Icon(Icons.fiber_manual_record,
+                            color: Colors.red, size: 10),
+                        subText: 'Add Page',
+                        onTap: () {},
+                      ),
+                    ],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                  ),
+                  ItemSideBarWidget(
+                    children: [],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 10,
+                      mainIcon: Icon(Icons.settings),
+                      mainText: 'Settings',
+                      onTap: () {},
+                    ),
+                  ),
+                  ItemSideBarWidget(
+                    children: [],
+                    isCollapsed: context.watch<HomeProvider>().isCollapsed,
+                    mainItemSideBarWidget: MainItemSideBarWidget(
+                      isSelect: widget.selectedIndex == 11,
+                      mainIcon: Icon(Icons.logout),
+                      mainText: 'Logout',
+                      onTap: () {
+                        context.read<AuthProvider>().logout();
+                        context.go('/login');
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
             AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
@@ -91,170 +348,6 @@ class _SideBarCustomWidgetState extends State<SideBarCustomWidget> with SingleTi
                 ),
               ),
             ),
-            Expanded(
-                child: ListView(
-              children: [
-                ItemSideBarWidget(
-                  children: [],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 0,
-                    mainIcon: Icon(Icons.home),
-                    mainText: 'Home',
-                    onTap: () {
-                      context.go('/home');
-                    },
-                  ),
-                ),
-                ItemSideBarWidget(
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 1 || widget.selectedIndex == 2,
-                    mainIcon: Icon(Icons.category),
-                    mainText: 'Categories',
-                    onTap: () {
-                      context.go('/category-list');
-                    },
-                  ),
-                  children: [
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 1,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Category List',
-                      onTap: () {
-                        print('Category List');
-
-                        context.go('/category-list');
-                      },
-                    ),
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 2,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Add Category',
-                      onTap: () {
-                        context.go('/category-add');
-                      },
-                    ),
-                  ],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                ),
-                ItemSideBarWidget(
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 3 || widget.selectedIndex == 4,
-                    mainIcon: Icon(Icons.cake_rounded),
-                    mainText: 'Products',
-                    onTap: () {
-                      context.go('/product-list');
-                    },
-                  ),
-                  children: [
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 3,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Product List',
-                      onTap: () {
-                        context.go('/product-list');
-                      },
-                    ),
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 4,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Add Product',
-                      onTap: () {
-                        context.go('/product-add');
-                      },
-                    ),
-                  ],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                ),
-                ItemSideBarWidget(
-                  children: [],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 5,
-                    mainIcon: Icon(Icons.shopping_cart_outlined),
-                    mainText: 'Orders',
-                    onTap: () {
-                      context.go('/order-list');
-                    },
-                  ),
-                ),
-                ItemSideBarWidget(
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 6 || widget.selectedIndex == 7,
-                    mainIcon: Icon(Icons.group),
-                    mainText: 'Users',
-                    onTap: () {
-                      context.go('/user-list');
-                    },
-                  ),
-                  children: [
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 6,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'User List',
-                      onTap: () {
-                        context.go('/user-list');
-                      },
-                    ),
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 7,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Add User',
-                      onTap: () {
-                        context.go('/user-add');
-                      },
-                    ),
-                  ],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                ),
-                ItemSideBarWidget(
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 8 || widget.selectedIndex == 9,
-                    mainIcon: Icon(Icons.chrome_reader_mode_rounded),
-                    mainText: 'Book',
-                    onTap: () {},
-                  ),
-                  children: [
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 8,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Page List',
-                      onTap: () {},
-                    ),
-                    SubItemSideBarWidget(
-                      isSelect: widget.selectedIndex == 9,
-                      subIcon: const Icon(Icons.fiber_manual_record, color: Colors.red, size: 10),
-                      subText: 'Add Page',
-                      onTap: () {},
-                    ),
-                  ],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                ),
-                ItemSideBarWidget(
-                  children: [],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 10,
-                    mainIcon: Icon(Icons.settings),
-                    mainText: 'Settings',
-                    onTap: () {},
-                  ),
-                ),
-                ItemSideBarWidget(
-                  children: [],
-                  isCollapsed: context.watch<HomeProvider>().isCollapsed,
-                  mainItemSideBarWidget: MainItemSideBarWidget(
-                    isSelect: widget.selectedIndex == 11,
-                    mainIcon: Icon(Icons.logout),
-                    mainText: 'Logout',
-                    onTap: () {
-                      context.read<AuthProvider>().logout();
-                      context.go('/login');
-                    },
-                  ),
-                ),
-              ],
-            ))
           ],
         ),
       ),
@@ -263,20 +356,28 @@ class _SideBarCustomWidgetState extends State<SideBarCustomWidget> with SingleTi
 }
 
 class ItemSideBarWidget extends StatefulWidget {
+  bool? childrenAreCollapsed;
+  Function()? onTapChildren;
   bool isCollapsed;
   MainItemSideBarWidget mainItemSideBarWidget;
   List<SubItemSideBarWidget> children;
 
-  ItemSideBarWidget({super.key, required this.children, required this.isCollapsed, required this.mainItemSideBarWidget});
+  ItemSideBarWidget({
+    super.key,
+    required this.children,
+    required this.isCollapsed,
+    required this.mainItemSideBarWidget,
+    this.childrenAreCollapsed,
+    this.onTapChildren,
+  });
 
   @override
   State<ItemSideBarWidget> createState() => _ItemSideBarWidgetState();
 }
 
-class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTickerProviderStateMixin {
+class _ItemSideBarWidgetState extends State<ItemSideBarWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
-  bool childrenAreCollapsed = true;
 
   @override
   void initState() {
@@ -303,7 +404,9 @@ class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTicker
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
-          color: widget.mainItemSideBarWidget.isSelect ? Colors.white : Colors.transparent,
+          color: widget.mainItemSideBarWidget.isSelect
+              ? Colors.white
+              : Colors.transparent,
           width: 1,
         ),
       ),
@@ -319,7 +422,9 @@ class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTicker
                 widget.mainItemSideBarWidget.onTap();
               },
               child: Row(
-                mainAxisAlignment: widget.isCollapsed ? MainAxisAlignment.center : MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: widget.isCollapsed
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.spaceBetween,
                 children: [
                   widget.mainItemSideBarWidget.mainIcon,
                   if (!widget.isCollapsed)
@@ -333,14 +438,15 @@ class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTicker
                   if (!widget.isCollapsed && widget.children.isNotEmpty)
                     IconButton(
                       onPressed: () {
-                        if (childrenAreCollapsed) {
+                        if (widget.childrenAreCollapsed!) {
                           _controller.forward();
                         } else {
                           _controller.reverse();
                         }
-                        setState(() {
+                        widget.onTapChildren!();
+                        /*setState(() {
                           childrenAreCollapsed = !childrenAreCollapsed;
-                        });
+                        });*/
                       },
                       icon: Icon(
                         Icons.arrow_drop_down,
@@ -351,7 +457,10 @@ class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTicker
               ),
             ),
           ),
-          if (!childrenAreCollapsed && widget.children.isNotEmpty && !widget.isCollapsed)
+          if (widget.childrenAreCollapsed != null &&
+              !widget.childrenAreCollapsed! &&
+              widget.children.isNotEmpty &&
+              !widget.isCollapsed)
             Column(
               children: List.generate(
                 widget.children.length,
@@ -364,7 +473,9 @@ class _ItemSideBarWidgetState extends State<ItemSideBarWidget> with SingleTicker
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                      color: widget.children[index].isSelect ? Colors.white : Colors.transparent,
+                      color: widget.children[index].isSelect
+                          ? Colors.white
+                          : Colors.transparent,
                       width: 1,
                     ),
                   ),
@@ -405,7 +516,11 @@ class MainItemSideBarWidget {
   String mainText;
   Function() onTap;
 
-  MainItemSideBarWidget({required this.mainIcon, required this.mainText, required this.onTap, required this.isSelect});
+  MainItemSideBarWidget(
+      {required this.mainIcon,
+      required this.mainText,
+      required this.onTap,
+      required this.isSelect});
 }
 
 class SubItemSideBarWidget {
@@ -414,5 +529,9 @@ class SubItemSideBarWidget {
   Function() onTap;
   bool isSelect;
 
-  SubItemSideBarWidget({required this.subIcon, required this.subText, required this.onTap, required this.isSelect});
+  SubItemSideBarWidget(
+      {required this.subIcon,
+      required this.subText,
+      required this.onTap,
+      required this.isSelect});
 }
