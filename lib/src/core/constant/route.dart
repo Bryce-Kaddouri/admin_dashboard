@@ -31,6 +31,10 @@ import '../../feature/category/presentation/screen/update_category_screen.dart';
 }*/
 
 class RouterHelper {
+  static back() {
+    Get.key?.currentState?.pop();
+  }
+
   GoRouter getRouter() {
     return GoRouter(
       navigatorKey: Get.key,
@@ -122,5 +126,85 @@ class RouterHelper {
         ),
       ],
     );
+  }
+}
+
+// custome route class to custom transition
+class CustomRoute<T> extends MaterialPageRoute<T> {
+  CustomRoute({
+    required WidgetBuilder builder,
+    RouteSettings? settings,
+  }) : super(
+          builder: builder,
+          settings: settings,
+        );
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    return FadeTransition(
+      opacity: animation,
+      child: builder(context),
+    );
+  }
+}
+
+// class to create a navigator class that with a fonction that take the destination root and a bool to know if we want to slide on the left or on the right
+class CustomNavigator {
+  static Future<T?> push<T extends Object?>(BuildContext context, Widget destination, {bool replace = false}) {
+    if (replace) {
+      return Navigator.pushReplacement(
+        context,
+        CustomRoute(
+          builder: (context) => destination,
+        ),
+      );
+    } else {
+      return Navigator.push(
+        context,
+        CustomRoute(
+          builder: (context) => destination,
+        ),
+      );
+    }
+  }
+
+  static Future<T?> pushAndRemoveUntil<T extends Object?>(BuildContext context, Widget destination, {required String destinationRoute}) {
+    return Navigator.pushAndRemoveUntil(
+      context,
+      CustomRoute(
+        builder: (context) => destination,
+      ),
+      ModalRoute.withName(destinationRoute),
+    );
+  }
+
+  static Future<T?> pushNamed<T extends Object?>(BuildContext context, String destination, {bool replace = false}) {
+    if (replace) {
+      return Navigator.pushReplacementNamed(
+        context,
+        destination,
+      );
+    } else {
+      return Navigator.pushNamed(
+        context,
+        destination,
+      );
+    }
+  }
+
+  static Future<T?> pushNamedAndRemoveUntil<T extends Object?>(BuildContext context, String destination, {required String destinationRoute}) {
+    return Navigator.pushNamedAndRemoveUntil(
+      context,
+      destination,
+      ModalRoute.withName(destinationRoute),
+    );
+  }
+
+  static void pop<T extends Object?>(BuildContext context, [T? result]) {
+    Navigator.pop(context, result);
+  }
+
+  static void popUntil(BuildContext context, String destinationRoute) {
+    Navigator.popUntil(context, ModalRoute.withName(destinationRoute));
   }
 }

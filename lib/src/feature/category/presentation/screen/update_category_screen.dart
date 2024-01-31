@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:get/get.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -17,28 +18,43 @@ class UpdateCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blueAccent,
+          leading: IconButton(
+            onPressed: () {
+/*
+              RouterHelper.back();
+*/
+              context.go('/category-list');
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+          centerTitle: true,
+          title: Text('Update Category'),
+        ),
         body: FutureBuilder(
-      future: context.read<CategoryProvider>().getCategoryById(categoryId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          print('data');
-          print(snapshot.data);
-          CategoryModel categoryModel = snapshot.data as CategoryModel;
-          return SingleChildScrollView(
-              child: UpdateCategoryForm(
-            categoryModel: categoryModel,
-          ));
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error'),
-          );
-        } else {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-      },
-    ));
+          future: context.read<CategoryProvider>().getCategoryById(categoryId),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              print('data');
+              print(snapshot.data);
+              CategoryModel categoryModel = snapshot.data as CategoryModel;
+              return SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: UpdateCategoryForm(
+                    categoryModel: categoryModel,
+                  ));
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text('Error'),
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }
 
@@ -54,7 +70,6 @@ class UpdateCategoryForm extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          Text('Update Categpry'),
           FormBuilder(
             key: _formKey,
             child: Column(

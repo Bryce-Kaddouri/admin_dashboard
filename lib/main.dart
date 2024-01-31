@@ -41,8 +41,9 @@ import 'package:admin_dashboard/src/feature/user/data/datasource/user_datasource
 import 'package:admin_dashboard/src/feature/user/data/repository/user_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/provider/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -59,6 +60,9 @@ Future<void> main() async {
   CategoryRepository categoryRepository = CategoryRepositoryImpl(dataSource: CategoryDataSource());
   ProductRepository productRepository = ProductRepositoryImpl(dataSource: ProductDataSource());
   UserRepository userRepository = UserRepositoryImpl(dataSource: UserDataSource());
+
+  // set path strategy
+  usePathUrlStrategy();
 
   runApp(
     MultiProvider(
@@ -123,6 +127,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp.router(
+      defaultTransition: Transition.fadeIn,
       scaffoldMessengerKey: scaffoldMessengerKey,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,

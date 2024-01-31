@@ -275,7 +275,12 @@ class _CategoryListScreenState extends State<CategoryListScreen> {
                                             child: Icon(Icons.edit, color: Colors.white),
                                             onTap: () {
                                               print('category id: ${category.id}');
+/*
+                                              context.push('/category-update/${category.id}');
+*/
+
                                               context.go('/category-update/${category.id}');
+
                                               /*print('edit');
                                               widget.mainPageController.jumpToPage(4);
                                               context.read<CategoryProvider>().setCategoryModel(category);*/
