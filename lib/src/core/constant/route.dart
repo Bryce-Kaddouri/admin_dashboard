@@ -1,9 +1,12 @@
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../feature/auth/presentation/screen/signin_screen.dart';
+import '../../feature/category/presentation/screen/update_category_screen.dart';
 
 /*class Routes {
   static const String home = '/home';
@@ -30,6 +33,7 @@ import '../../feature/auth/presentation/screen/signin_screen.dart';
 class RouterHelper {
   GoRouter getRouter() {
     return GoRouter(
+      navigatorKey: Get.key,
       redirect: (context, state) {
         // check if user is logged in
         // if not, redirect to login page
@@ -65,6 +69,23 @@ class RouterHelper {
             currentIndex: 2,
           ),
         ),
+        GoRoute(
+            path: '/category-update/:id',
+            builder: (context, state) {
+              String? id = state.pathParameters['id'];
+              if (id == null) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('Category Not found'),
+                  ),
+                );
+              } else {
+                int idInt = int.parse(id);
+                return UpdateCategoryScreen(
+                  categoryId: idInt,
+                );
+              }
+            }),
         GoRoute(
           path: '/product-list',
           builder: (context, state) => HomeScreen(

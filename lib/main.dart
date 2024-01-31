@@ -118,10 +118,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
 
   GoRouter router = RouterHelper().getRouter();
+  GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp.router(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,
