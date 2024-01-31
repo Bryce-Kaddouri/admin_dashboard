@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../feature/auth/presentation/screen/signin_screen.dart';
 import '../../feature/category/presentation/screen/update_category_screen.dart';
+import '../../feature/product/presentation/screen/product_screen.dart';
 
 /*class Routes {
   static const String home = '/home';
@@ -87,6 +88,24 @@ class RouterHelper {
                 int idInt = int.parse(id);
                 return UpdateCategoryScreen(
                   categoryId: idInt,
+                );
+              }
+            }),
+
+        GoRoute(
+            path: '/product-update/:id',
+            builder: (context, state) {
+              String? id = state.pathParameters['id'];
+              if (id == null) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('Product Not found'),
+                  ),
+                );
+              } else {
+                int idInt = int.parse(id);
+                return UpdateProductScreen(
+                  productId: idInt,
                 );
               }
             }),

@@ -105,6 +105,22 @@ class CategoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<List<CategoryModel>?> getCategoriesAsync() async {
+
+    List<CategoryModel> categoryList = [];
+    final result = await categoryGetCategoriesUseCase.call(NoParams());
+
+    await result.fold((l) async {
+      return null;
+    }, (r) async {
+      print(r);
+      categoryList = r;
+    });
+
+    _categoryList = categoryList;
+    return categoryList;
+  }
+
   Future<XFile?> pickImage() async {
     final ImagePicker picker = ImagePicker();
     ImageSource source = ImageSource.gallery;

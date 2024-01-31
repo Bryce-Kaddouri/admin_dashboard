@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/datasource/product_datasource.dart';
@@ -136,10 +137,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 child: InkWell(
                   child: Icon(Icons.add, color: Colors.white),
                   onTap: () {
-                    print('add');
+                    /*print('add');
                     context.read<ProductProvider>().setProductModel(null);
 
-                    widget.mainPageController.jumpToPage(7);
+                    widget.mainPageController.jumpToPage(7);*/
+
+                    context.go('/product-add');
                   },
                 ),
               ),
@@ -313,11 +316,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                 color: Colors.white),
                                             onTap: () {
                                               print('edit');
-                                              widget.mainPageController
+                                              context.go('/product-update/${product.id}');
+                                              /*widget.mainPageController
                                                   .jumpToPage(8);
                                               context
                                                   .read<ProductProvider>()
-                                                  .setProductModel(product);
+                                                  .setProductModel(product);*/
                                             },
                                           ),
                                         ),
