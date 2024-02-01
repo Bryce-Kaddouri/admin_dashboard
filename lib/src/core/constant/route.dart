@@ -1,5 +1,6 @@
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
+import 'package:admin_dashboard/src/feature/user/presentation/screen/user_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
@@ -139,6 +140,23 @@ class RouterHelper {
             currentIndex: 7,
           ),
         ),
+        GoRoute(
+            path: '/user-detail/:uid',
+            builder: (context, state) {
+              String? uid = state.pathParameters['uid'];
+              if (uid == null) {
+                return Scaffold(
+                  body: Center(
+                    child: Text('User Not found'),
+                  ),
+                );
+              } else {
+
+                return UserDetailScreen(
+                  uid: uid,
+                );
+              }
+            }),
         GoRoute(
           path: '/login',
           builder: (context, state) => SignInScreen(),

@@ -75,3 +75,42 @@ class ProductModel {
   }
 }
 */
+
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+class UserModel{
+  final String id;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String role;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isActive;
+
+  UserModel({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.role,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.isActive,
+  });
+
+  factory UserModel.fromUser(User userData){
+    return UserModel(
+        id: userData.id,
+      firstName: userData.userMetadata?['fName'] ?? '',
+      lastName: userData.userMetadata?['lName'] ?? '',
+      email: userData.email ?? '',
+      role: userData.appMetadata['role'] ?? '',
+      createdAt: DateTime.parse(userData.createdAt),
+      updatedAt: userData.updatedAt != null ? DateTime.parse(userData.updatedAt!) : DateTime.parse(userData.createdAt),
+      isActive: userData.userMetadata?['isActive'] ?? false,
+    );
+  }
+
+
+}

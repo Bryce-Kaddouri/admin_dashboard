@@ -2,6 +2,7 @@ import 'package:admin_dashboard/src/feature/category/presentation/screen/categor
 import 'package:admin_dashboard/src/feature/category/presentation/screen/category_list_screen.dart';
 import 'package:admin_dashboard/src/feature/product/presentation/screen/product_add_screen.dart';
 import 'package:admin_dashboard/src/feature/product/presentation/screen/product_list_screen.dart';
+import 'package:admin_dashboard/src/feature/stat/presentation/screen/stat_screen.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/screen/user_add_screen.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/screen/user_list_screen.dart';
 import 'package:flutter/material.dart';
@@ -47,11 +48,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                     child: PageView(
               controller: pageController,
               children: [
-                Container(
-                  child: Center(
-                    child: Text('Home'),
-                  ),
-                ),
+                StatScreen(),
                 CategoryListScreen(mainPageController: pageController),
                 CategoryAddScreen(pageController: pageController),
                 ProductListScreen(mainPageController: pageController),

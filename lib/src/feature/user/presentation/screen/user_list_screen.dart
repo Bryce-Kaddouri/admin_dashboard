@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -266,7 +267,12 @@ class _UserListScreenState extends State<UserListScreen> {
                               print('-' * 50);
 
                               return Card(
-                                child: ListTile(
+                                child:
+
+                                ListTile(
+                                  onTap: (){
+                                    context.go('/user-detail/${user.id.toString()}');
+                                  },
                                   tileColor: Colors.grey[200],
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
@@ -393,6 +399,7 @@ class _UserListScreenState extends State<UserListScreen> {
                                     ),
                                   ),
                                 ),
+
                               );
                             },
                           );
