@@ -30,33 +30,6 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
   final _formKey = GlobalKey<FormBuilderState>();
   String imgUrl = '';
 
-  void _initData() async {
-    context.read<CategoryProvider>().getCategories();
-    print('initState');
-
-    if (context.read<ProductProvider>().productModel != null) {
-      String? imageUrl = await context.read<ProductProvider>().getSignedUrl(
-          context
-              .read<ProductProvider>()
-              .productModel!
-              .imageUrl
-              .split('/')
-              .last);
-
-      setState(() {
-        imgUrl = imageUrl!;
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-/*
-    _initData();
-*/
-  }
-
   @override
   Widget build(BuildContext context) {
     print(context.watch<ProductProvider>().productModel);
@@ -66,9 +39,8 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
         child: Column(
           children: [
             Text(
-                context.watch<ProductProvider>().productModel == null
-                    ? 'Add Product'
-                    : 'Update Product',
+                'Add Product'
+                    ,
                 style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
@@ -405,115 +377,112 @@ class _ProductAddScreenState extends State<ProductAddScreen> {
                     validator: FormBuilderValidators.compose([]),
                   ),
                   SizedBox(height: 40),
-                  FormBuilderDropdown<int>(
-                    initialValue:
-                        context.watch<ProductProvider>().productModel == null
-                            ? null
-                            : context
-                                .watch<ProductProvider>()
-                                .productModel!
-                                .categoryId,
-                    validator: FormBuilderValidators.compose([
-                      FormBuilderValidators.required(),
-                    ]),
-                    decoration: InputDecoration(
-                      fillColor: Colors.white,
-                      filled: true,
-                      hintText: '-- Select Category --',
-                      hintStyle: TextStyle(
-                        color: Colors.grey[700],
-                        fontSize: 20,
-                      ),
-                      constraints: BoxConstraints(
-                        maxWidth: 500,
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      floatingLabelAlignment: FloatingLabelAlignment.start,
-                      label: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
+                  FutureBuilder(future: context.read<CategoryProvider>().getCategoriesAsync(), builder: (context, snapshotCategories){
+
+                    if(snapshotCategories.connectionState == ConnectionState.waiting){
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    List<CategoryModel> categories = snapshotCategories.data as List<CategoryModel>;
+                    return FormBuilderDropdown<int>(
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(),
+                      ]),
+                      decoration: InputDecoration(
+                        fillColor: Colors.white,
+                        filled: true,
+                        hintText: '-- Select Category --',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 20,
+                        ),
+                        constraints: BoxConstraints(
+                          maxWidth: 500,
+                        ),
+                        border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              blurRadius: 5,
-                              offset: Offset(0, 3),
-                            ),
-                          ],
                         ),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
-                        child: RichText(
-                          text: TextSpan(
-                            text: 'Category',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.bold,
-                              fontSize: 24,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        floatingLabelAlignment: FloatingLabelAlignment.start,
+                        label: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.5),
+                                blurRadius: 5,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
+                          ),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          child: RichText(
+                            text: TextSpan(
+                              text: 'Category',
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: '*',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 24,
+                                  ),
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.grey[300]!,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(
+                            color: Colors.redAccent,
+                          ),
+                        ),
+                      ),
+                      name: 'category_id',
+                      items: List.generate(
+                        categories.length,
+                            (index) => DropdownMenuItem(
+                          child: Row(
                             children: [
-                              TextSpan(
-                                text: '*',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 24,
+                              Text(
+                                  '${categories[index].id} - '),
+                              Expanded(
+                                child: Container(
+                                  child: Text(categories[index]
+                                      .name),
                                 ),
                               ),
                             ],
                           ),
+                          value: categories[index]
+                              .id,
                         ),
                       ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.grey[300]!,
-                        ),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          width: 2,
-                          color: Colors.blueAccent,
-                        ),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide(
-                          color: Colors.redAccent,
-                        ),
-                      ),
-                    ),
-                    name: 'category_id',
-                    items: List.generate(
-                      context.watch<CategoryProvider>().categoryList.length,
-                      (index) => DropdownMenuItem(
-                        child: Row(
-                          children: [
-                            Text(
-                                '${context.watch<CategoryProvider>().categoryList[index].id} - '),
-                            Expanded(
-                              child: Container(
-                                child: Text(context
-                                    .watch<CategoryProvider>()
-                                    .categoryList[index]
-                                    .name),
-                              ),
-                            ),
-                          ],
-                        ),
-                        value: context
-                            .watch<CategoryProvider>()
-                            .categoryList[index]
-                            .id,
-                      ),
-                    ),
-                  ),
+                    );
+                  }),
+
                 ],
               ),
             ),
