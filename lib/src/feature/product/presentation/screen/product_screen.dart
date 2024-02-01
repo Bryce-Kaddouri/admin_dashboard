@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:admin_dashboard/src/feature/category/data/model/category_model.dart';
 import 'package:admin_dashboard/src/feature/product/data/model/product_model.dart';
 import 'package:admin_dashboard/src/feature/product/presentation/provider/product_provider.dart';
 import 'package:flutter/material.dart';
@@ -37,18 +38,24 @@ class UpdateProductScreen extends StatelessWidget {
           title: Text('Update Product'),
         ),
         body: FutureBuilder(
-          future: context.read<ProductProvider>().getProductById(productId),
+          future: Future.wait([
+            context.read<ProductProvider>().getProductById(productId),
+            context.read<CategoryProvider>().getCategoriesAsync(),
+          ]),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               print('data');
               print(snapshot.data);
-              ProductModel productModel = snapshot.data as ProductModel;
+              ProductModel productModel = snapshot.data![0] as ProductModel;
+              List<CategoryModel> categories = snapshot.data![1] as List<CategoryModel>;
+              print(categories);
               print( productModel
                   .categoryId);
               return SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: UpdateProductForm(
                     productModel: productModel,
+                    categories: categories,
                   ));
             } else if (snapshot.hasError) {
               return Center(
@@ -66,7 +73,8 @@ class UpdateProductScreen extends StatelessWidget {
 
 class UpdateProductForm extends StatelessWidget {
   final ProductModel productModel;
-  UpdateProductForm({super.key, required this.productModel});
+  List<CategoryModel> categories;
+  UpdateProductForm({super.key, required this.productModel, required this.categories});
 
   // global key for the form
   final _formKey = GlobalKey<FormBuilderState>();
@@ -399,10 +407,7 @@ class UpdateProductForm extends StatelessWidget {
                     validator: FormBuilderValidators.compose([]),
                   ),
                   SizedBox(height: 40),
-                  FutureBuilder(future: context.read<CategoryProvider>().getCategoriesAsync(), builder: (context, categSnapshot){
-                    print(categSnapshot.data);
-                    return Container();
-                  }),
+
                   
                   FormBuilderDropdown<int>(
                     initialValue:
@@ -486,25 +491,21 @@ class UpdateProductForm extends StatelessWidget {
                     ),
                     name: 'category_id',
                     items: List.generate(
-                      context.watch<CategoryProvider>().categoryList.length,
+                      categories.length,
                           (index) => DropdownMenuItem(
                         child: Row(
                           children: [
                             Text(
-                                '${context.watch<CategoryProvider>().categoryList[index].id} - '),
+                                '${categories[index].id} - '),
                             Expanded(
                               child: Container(
-                                child: Text(context
-                                    .watch<CategoryProvider>()
-                                    .categoryList[index]
+                                child: Text(categories[index]
                                     .name),
                               ),
                             ),
                           ],
                         ),
-                        value: context
-                            .watch<CategoryProvider>()
-                            .categoryList[index]
+                        value: categories[index]
                             .id,
                       ),
                     ),
