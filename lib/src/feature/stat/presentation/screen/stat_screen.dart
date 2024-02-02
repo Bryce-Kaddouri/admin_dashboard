@@ -43,12 +43,9 @@ class StatScreen extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      width: 500,
-                      height: 500,
-                      child:DonutAutoLabelChart.withRandomData(
-/*
-                        statOrderByCustomerList: statOrderByCustomerList,
-*/
+
+                      child:PieChartWidget(
+                        lstData: statOrderByCategoryModelList,
                       ),
                     ),
                   ],
