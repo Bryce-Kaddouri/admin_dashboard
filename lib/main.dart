@@ -40,6 +40,7 @@ import 'package:admin_dashboard/src/feature/user/business/usecase/user_update_us
 import 'package:admin_dashboard/src/feature/user/data/datasource/user_datasource.dart';
 import 'package:admin_dashboard/src/feature/user/data/repository/user_repository_impl.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/provider/user_provider.dart';
+import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
@@ -126,9 +127,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp.router(
-      defaultTransition: Transition.fadeIn,
-      scaffoldMessengerKey: scaffoldMessengerKey,
+    return FluentApp.router(
+      debugShowCheckedModeBanner:  false,
+      /*defaultTransition: Transition.fadeIn,
+      scaffoldMessengerKey: scaffoldMessengerKey,*/
       routerDelegate: router.routerDelegate,
       routeInformationParser: router.routeInformationParser,
       routeInformationProvider: router.routeInformationProvider,

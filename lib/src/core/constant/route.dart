@@ -1,5 +1,6 @@
 import 'package:admin_dashboard/src/feature/auth/presentation/provider/auth_provider.dart';
 import 'package:admin_dashboard/src/feature/home/presentation/screen/home_screen.dart';
+import 'package:admin_dashboard/src/feature/home/presentation/screen/new_home_screen.dart';
 import 'package:admin_dashboard/src/feature/user/presentation/screen/user_detail_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -59,9 +60,10 @@ class RouterHelper {
       routes: [
         GoRoute(
           path: '/home',
-          builder: (context, state) => HomeScreen(
+          builder: (context, state) => /*HomeScreen(
             currentIndex: 0,
-          ),
+          ),*/
+          NewHomeScreen(),
         ),
         GoRoute(
           path: '/category-list',
